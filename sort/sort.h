@@ -49,16 +49,39 @@ class BinarySearshInsertionSort{
     }
 };
 
-class QuitSort{
+class QuikeSort{
     public:
     void sort(vector<int> & nums){
-                 
-
-
+        m_fSort(nums,0,nums.size()-1);
         cout<<"QuikeSort:";
         for(auto t:nums)
             cout<<t<<" ";
         cout<<endl;
+    }
+
+    private:
+    void m_fSort(vector<int> & nums,int begin,int end){
+        if(begin<end){
+            int i=begin;
+            int j=end;
+            int tmp=nums[i];
+
+            while(i<j){
+                while(i<j&&nums[j]>=tmp)
+                    j--;
+                if(i<j)
+                    nums[i++]=nums[j];
+                
+                while(i<j&&nums[i]<tmp)
+                    i++;
+                if(i<j)
+                    nums[j--]=nums[i];
+            }
+
+            nums[i]=tmp;
+            m_fSort(nums,begin,i-1);
+            m_fSort(nums,i+1,end);
+        }
     }
 
 };

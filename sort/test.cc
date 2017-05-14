@@ -20,6 +20,7 @@ int main(){
     HeapSort heap;
     BubbleSort bubble;
     ShakerSort shaker;
+    QuikeSort quike;
 
     select.sort(nums);
     insert.sort(nums);
@@ -27,6 +28,7 @@ int main(){
     heap.sort(nums);
     bubble.sort(nums);
     shaker.sort(nums);
+    quike.sort(nums);
     
 
     return 0;
