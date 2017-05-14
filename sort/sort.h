@@ -50,7 +50,16 @@ class BinarySearshInsertionSort{
 };
 
 class QuitSort{
+    public:
+    void sort(vector<int> & nums){
+                 
 
+
+        cout<<"QuikeSort:";
+        for(auto t:nums)
+            cout<<t<<" ";
+        cout<<endl;
+    }
 
 };
 
@@ -163,7 +172,26 @@ class BubbleSort{
 };
 
 class ShakerSort{
-    
+    public:
+    void sort(vector<int> & nums){
+        int begin=0;
+        int end=nums.size()-1;
+        while(begin<end){
+            for(int i=begin;i<end;i++)
+                if(nums[i]>nums[i+1])
+                    swap(nums[i],nums[i+1]);
+            end--;
+
+            for(int i=end;i>begin;i--)
+                if(nums[i]<nums[i-1])
+                    swap(nums[i],nums[i-1]);
+            begin++;
+        }
+        cout<<"ShakerSort:";
+        for(auto t:nums)
+            cout<<t<<" ";
+        cout<<endl;
+    }
 };
 
 class HeashSort{

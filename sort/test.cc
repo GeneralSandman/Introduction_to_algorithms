@@ -19,12 +19,14 @@ int main(){
     MergeSort merge;
     HeapSort heap;
     BubbleSort bubble;
+    ShakerSort shaker;
 
     select.sort(nums);
     insert.sort(nums);
     merge.sort(nums);
     heap.sort(nums);
     bubble.sort(nums);
+    shaker.sort(nums);
     
 
     return 0;
