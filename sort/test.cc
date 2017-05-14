@@ -17,10 +17,14 @@ int main(){
     SelectionSort select;
     InsertionSort insert;
     MergeSort merge;
+    HeapSort heap;
+    BubbleSort bubble;
 
     select.sort(nums);
     insert.sort(nums);
     merge.sort(nums);
+    heap.sort(nums);
+    bubble.sort(nums);
     
 
     return 0;
