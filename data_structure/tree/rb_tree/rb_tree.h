@@ -1,4 +1,5 @@
-
+#ifndef RB_TREE
+#define RB_TREE
 
 
 namespace RBtree
@@ -25,3 +26,5 @@ public:
   RBNode *Uncle(RBNode *);
 };
 }
+
+#endif

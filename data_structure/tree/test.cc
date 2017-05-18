@@ -3,9 +3,9 @@
 
 using namespace std;
 /*
-   15
-   10		20
-   8	12		17	25
+        15
+    10		        20
+   8	12		    17	    25
    6 9	11 13		16 18	21 27
 
 
@@ -22,7 +22,7 @@ int main()
 
 void BinaryTreeTest(void)
 {
-    using namespace Tree;
+     using namespace Tree;
     {
         BinaryTree tree;
         tree.InsertNode(15);
@@ -41,11 +41,22 @@ void BinaryTreeTest(void)
         tree.InsertNode(21);
         tree.InsertNode(27);
         tree.PrintTreePreorder();
+        tree.PrintTreeLevel();
+
+        tree.DeleteNode(15);
+        tree.PrintTreeLevel();
+
+        tree.DeleteNode(27);
+        tree.PrintTreeLevel();
+
+        tree.DeleteNode(12);
+        tree.PrintTreeLevel();
     }
 }
 
 void BlancedTreeTest(void)
 {
+   
 }
 
 void HuffmanTest(void)

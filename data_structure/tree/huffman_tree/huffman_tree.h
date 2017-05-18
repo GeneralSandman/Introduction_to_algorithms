@@ -1,4 +1,5 @@
-
+#ifndef HUFFMAN
+#define HUFFMAN
 
 namespace Huffman
 {
@@ -55,3 +56,6 @@ public:
   ~HuffmanTree();
 };
 }
+
+
+#endif

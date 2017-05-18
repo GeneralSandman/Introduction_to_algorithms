@@ -1,4 +1,5 @@
-
+#include<iostream>
+#include"huffman_tree.h"
 
 namespace Huffman
 {

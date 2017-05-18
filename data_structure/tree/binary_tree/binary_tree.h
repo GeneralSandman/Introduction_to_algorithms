@@ -45,7 +45,7 @@ class BinaryTree
     void m_fPreorder(BinaryTreeNode *);
     void m_fInorder(BinaryTreeNode *);
     void m_fPostorder(BinaryTreeNode *);
-    vector<vector<int> > m_fLevel();
+    void m_fLevel(vector<vector<int>> & result,BinaryTreeNode *node,int level);
     void m_fDeleteAllNode(BinaryTreeNode * node,int &);
 
   public:

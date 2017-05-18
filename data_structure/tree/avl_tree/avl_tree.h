@@ -1,4 +1,5 @@
-
+#ifndef AVL_TREE
+#define AVL_TREE
 namespace Avl
 {
 using namespace Tree;
@@ -36,3 +37,5 @@ public:
   virtual void deleteNode(const int &value);
 };
 }
+
+#endif

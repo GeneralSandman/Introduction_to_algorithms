@@ -12,36 +12,44 @@ BinaryTreeNode::BinaryTreeNode(const int &value)
     m_pRight = nullptr;
 }
 
-int BinaryTreeNode::GetValue(void){
+int BinaryTreeNode::GetValue(void)
+{
     return m_nValue;
 }
 
-BinaryTreeNode* BinaryTreeNode::GetParent(void){
+BinaryTreeNode *BinaryTreeNode::GetParent(void)
+{
     return m_pParent;
 }
 
-BinaryTreeNode* BinaryTreeNode::GetLeft(void){
+BinaryTreeNode *BinaryTreeNode::GetLeft(void)
+{
     return m_pLeft;
 }
 
-BinaryTreeNode* BinaryTreeNode::GetRight(void){
+BinaryTreeNode *BinaryTreeNode::GetRight(void)
+{
     return m_pRight;
 }
 
-void BinaryTreeNode::SetValue(const int & value){
-    m_nValue=value;
+void BinaryTreeNode::SetValue(const int &value)
+{
+    m_nValue = value;
 }
 
-void BinaryTreeNode::SetParent(BinaryTreeNode * parent){
-    m_pParent=parent;
+void BinaryTreeNode::SetParent(BinaryTreeNode *parent)
+{
+    m_pParent = parent;
 }
 
-void BinaryTreeNode::SetLeft(BinaryTreeNode * left){
-    m_pLeft=left;
+void BinaryTreeNode::SetLeft(BinaryTreeNode *left)
+{
+    m_pLeft = left;
 }
 
-void BinaryTreeNode::SetRight(BinaryTreeNode * right){
-    m_pRight=right;
+void BinaryTreeNode::SetRight(BinaryTreeNode *right)
+{
+    m_pRight = right;
 }
 
 BinaryTreeNode::~BinaryTreeNode()
@@ -49,10 +57,12 @@ BinaryTreeNode::~BinaryTreeNode()
     cout << "distory BinaryTreeNode: " << m_nValue << endl;
 }
 
-BinaryTreeNode * BinaryTree::m_fFindNode(const int &value)
+BinaryTreeNode *BinaryTree::m_fFindNode(const int &value)
 {
-    if (m_pRoot == nullptr)
+    if (m_pRoot == nullptr){
         return nullptr;
+    }
+        
     BinaryTreeNode *node = m_pRoot;
     while (node)
     {
@@ -68,10 +78,11 @@ BinaryTreeNode * BinaryTree::m_fFindNode(const int &value)
 
 void BinaryTree::m_fDeleteRoot()
 {
-    BinaryTreeNode *_deletenode = m_pRoot;
+    BinaryTreeNode * _deletenode = m_pRoot;
 
     if (_deletenode->m_pLeft == nullptr && _deletenode->m_pRight == nullptr)
     {
+        m_pRoot=nullptr;
     }
     else if (_deletenode->m_pLeft != nullptr && _deletenode->m_pRight == nullptr)
     {
@@ -95,10 +106,11 @@ void BinaryTree::m_fDeleteRoot()
         }
         else
         {
-            m_pRoot->m_nValue = LeftMaxNode->m_nValue;
+            swap(m_pRoot->m_nValue, LeftMaxNode->m_nValue);
             LeftMaxNode->m_pParent->m_pRight = LeftMaxNode->m_pLeft;
-            if (LeftMaxNode->m_pLeft)
+            if (LeftMaxNode->m_pLeft != nullptr)
                 LeftMaxNode->m_pLeft->m_pParent = LeftMaxNode->m_pParent;
+            _deletenode = LeftMaxNode;
         }
     }
 
@@ -172,7 +184,7 @@ BinaryTreeNode *BinaryTree::m_fFindLeftSubTreeMaxNode(BinaryTreeNode *node)
 BinaryTreeNode *BinaryTree::m_fFindRightSubTreeMinNode(BinaryTreeNode *node)
 {
     BinaryTreeNode *rightmin = nullptr, *right = node->m_pRight;
-    while (right!=nullptr)
+    while (right != nullptr)
     {
         rightmin = right;
         right = right->m_pLeft;
@@ -210,26 +222,39 @@ void BinaryTree::m_fPostorder(BinaryTreeNode *node)
     }
 }
 
-vector<vector<int>> BinaryTree::m_fLevel()
+void BinaryTree::m_fLevel(vector<vector<int>> &result, BinaryTreeNode *node, int level)
 {
+    if (node == nullptr)
+        return;
+    if (level == result.size())
+        result.push_back(vector<int>());
+    result[level].push_back(node->m_nValue);
+    m_fLevel(result, node->m_pLeft, level + 1);
+    m_fLevel(result, node->m_pRight, level + 1);
 }
 
-void BinaryTree::m_fDeleteAllNode(BinaryTreeNode * node,int & deleteNumber){
-    
-    if(node->m_pLeft!=nullptr)
-        m_fDeleteAllNode(node->m_pLeft,deleteNumber);
-    if(node->m_pRight!=nullptr)
-        m_fDeleteAllNode(node->m_pRight,deleteNumber);
-    if(node->m_pLeft==nullptr && node->m_pRight==nullptr){
-        BinaryTreeNode * parent=node->m_pParent;
-        if(parent!=nullptr){
-            if(node->m_nValue<parent->m_nValue)
-                parent->m_pLeft=nullptr;
-            else 
-                parent->m_pRight=nullptr;
+void BinaryTree::m_fDeleteAllNode(BinaryTreeNode *node, int &deleteNumber)
+{
+    if (node==nullptr){
+        return;
+        
+    }
+    if (node->m_pLeft != nullptr)
+        m_fDeleteAllNode(node->m_pLeft, deleteNumber);
+    if (node->m_pRight != nullptr)
+        m_fDeleteAllNode(node->m_pRight, deleteNumber);
+    if (node->m_pLeft == nullptr && node->m_pRight == nullptr)
+    {
+        BinaryTreeNode *parent = node->m_pParent;
+        if (parent != nullptr)
+        {
+            if (node->m_nValue < parent->m_nValue)
+                parent->m_pLeft = nullptr;
+            else
+                parent->m_pRight = nullptr;
         }
 
-        node->m_pParent=nullptr;
+        node->m_pParent = nullptr;
         deleteNumber++;
         m_nNumber--;
         delete node;
@@ -239,39 +264,47 @@ void BinaryTree::m_fDeleteAllNode(BinaryTreeNode * node,int & deleteNumber){
 BinaryTree::BinaryTree()
 {
     m_pRoot = nullptr;
-    m_nNumber=0;
+    m_nNumber = 0;
 }
 
 BinaryTree::~BinaryTree()
 {
-    int deleteNumber=0;
-    int number=GetNumber();
-    m_fDeleteAllNode(m_pRoot,deleteNumber);
-    if(number==deleteNumber && GetNumber()==0)
-        cout<<"all node are deleted\n";
+    int deleteNumber = 0;
+    int number = GetNumber();
+    m_fDeleteAllNode(m_pRoot, deleteNumber);
+    if (number == deleteNumber && GetNumber() == 0)
+        cout << "all node are deleted\n";
     else
-        cout<<"delete tree failed\n";
+        cout << "delete tree failed\n";
 }
 
 void BinaryTree::PrintTreePreorder()
 {
+    cout << "preorder: ";
     m_fPreorder(m_pRoot);
+    cout << endl;
 }
 
 void BinaryTree::PrintTreeInorder()
 {
+    cout << "inorder: ";
     m_fInorder(m_pRoot);
+    cout << endl;
 }
 
 void BinaryTree::PrintTreePostorder()
 {
+    cout << "postorder: ";
     m_fPostorder(m_pRoot);
+    cout << endl;
 }
 
 void BinaryTree::PrintTreeLevel()
 {
     vector<vector<int>> result;
-    result = m_fLevel();
+    m_fLevel(result, m_pRoot, 0);
+    if(result.empty())
+        cout<<"empty\n";
     for (int i = 0; i < result.size(); i++)
     {
         cout << "level " << i + 1 << ":";
@@ -314,7 +347,7 @@ void BinaryTree::InsertNode(const int &value)
 
         newNode->m_pParent = previous;
     }
-    
+
     m_nNumber++;
 
 DONE:
@@ -323,14 +356,25 @@ DONE:
 
 void BinaryTree::DeleteNode(const int &value)
 {
-    BinaryTreeNode *DeleteNode = m_fFindNode(value);
-    if (DeleteNode == m_pRoot)
+    BinaryTreeNode * DeleteNode = m_fFindNode(value);
+    if (DeleteNode == nullptr){
+        cout<<"no this value:"<<value<<endl;
+        return;
+
+    }
+    else if (DeleteNode == m_pRoot)
+    {
         m_fDeleteRoot();
+    }
     else
+    {
         m_fDeleteGeneralNode(DeleteNode);
+    }
+    m_nNumber--;
 }
 
-int BinaryTree::GetNumber(void){
+int BinaryTree::GetNumber(void)
+{
     return m_nNumber;
 }
 }
