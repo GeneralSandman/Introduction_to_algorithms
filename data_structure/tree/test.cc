@@ -26,22 +26,22 @@ void BinaryTreeTest(void)
     {
         BinaryTree tree;
         tree.InsertNode(15);
-        tree.InsertNode(10);
-        tree.InsertNode(20);
-        tree.InsertNode(8);
-        tree.InsertNode(12);
-        tree.InsertNode(17);
-        tree.InsertNode(25);
-        tree.InsertNode(6);
-        tree.InsertNode(9);
-        tree.InsertNode(11);
-        tree.InsertNode(13);
-        tree.InsertNode(16);
-        tree.InsertNode(18);
-        tree.InsertNode(21);
-        tree.InsertNode(27);
-        tree.PrintTreePreorder();
-        tree.PrintTreeLevel();
+        // tree.InsertNode(10);
+        // tree.InsertNode(20);
+        // tree.InsertNode(8);
+        // tree.InsertNode(12);
+        // tree.InsertNode(17);
+        // tree.InsertNode(25);
+        // tree.InsertNode(6);
+        // tree.InsertNode(9);
+        // tree.InsertNode(11);
+        // tree.InsertNode(13);
+        // tree.InsertNode(16);
+        // tree.InsertNode(18);
+        // tree.InsertNode(21);
+        // tree.InsertNode(27);
+        // tree.PrintTreePreorder();
+        // tree.PrintTreeLevel();
 
         tree.DeleteNode(15);
         tree.PrintTreeLevel();
