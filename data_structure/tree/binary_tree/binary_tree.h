@@ -19,15 +19,15 @@ class BinaryTreeNode
   public:
     BinaryTreeNode(const int &);
     
-    int GetValue(void);
-    BinaryTreeNode * GetParent(void);
-    BinaryTreeNode * GetLeft(void);
-    BinaryTreeNode * GetRight(void);
+    virtual int GetValue(void);
+    virtual BinaryTreeNode * GetParent(void);
+    virtual BinaryTreeNode * GetLeft(void);
+    virtual BinaryTreeNode * GetRight(void);
 
-    void SetValue(const int &);
-    void SetParent(BinaryTreeNode *);
-    void SetLeft(BinaryTreeNode *);
-    void SetRight(BinaryTreeNode *);
+    virtual void SetValue(const int &);
+    virtual void SetParent(BinaryTreeNode *);
+    virtual void SetLeft(BinaryTreeNode *);
+    virtual void SetRight(BinaryTreeNode *);
 
     ~BinaryTreeNode();
 };

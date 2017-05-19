@@ -1,7 +1,17 @@
 #include<iostream>
+#include"../binary_tree/binary_tree.h"
 #include"avl_tree.h"
 namespace Avl
 {
+using namespace Tree;
+
+AvlTreeNode::AvlTreeNode(const int & value):BinaryTreeNode(value){
+    m_nHeight=0;
+    m_nBalanceFactor=0;
+}
+
+AvlTreeNode::~AvlTreeNode(){
+}
 
 void AvlTree::m_fLeftRotate(AvlTreeNode *node)
 {
@@ -16,7 +26,7 @@ void AvlTree::m_fLeftRotate(AvlTreeNode *node)
 		 *   ly ry               lx ly 
 		 */
     AvlTreeNode *x = node;
-    AvlTreeNode *p = x->m_pParent;
+    AvlTreeNode *p = (AvlTreeNode *)(x->m_pParent);
     AvlTreeNode *lx = x->m_pLeft;
     AvlTreeNode *y = x->m_pRight;
     AvlTreeNode *ly = y->m_pLeft;
