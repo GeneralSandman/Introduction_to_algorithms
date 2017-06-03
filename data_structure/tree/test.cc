@@ -1,5 +1,6 @@
 #include <iostream>
 #include "./binary_tree/binary_tree.h"
+#include "./avl_tree/avl_tree.h"
 
 using namespace std;
 /*
@@ -52,6 +53,17 @@ void BinaryTreeTest(void)
         tree.DeleteNode(12);
         tree.PrintTreeLevel();
     }
+}
+
+void testNode(void){
+    using namespace Tree;
+    using namespace Avl;
+
+    BinaryTreeNode n1(19);
+    AvlTreeNode n2(1);
+
+    
+
 }
 
 void BlancedTreeTest(void)

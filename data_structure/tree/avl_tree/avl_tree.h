@@ -15,14 +15,20 @@ public:
   AvlTreeNode(const int &value);
 
   virtual int GetValue(void);
-  virtual AvlTreeNode * GetParent(void);
-  virtual AvlTreeNode * GetLeft(void);
-  virtual AvlTreeNode * GetRight(void);
+  virtual AvlTreeNode * GetParent(void){return (AvlTreeNode *)(m_pParent);}
+  virtual AvlTreeNode * GetLeft(void){return (AvlTreeNode *)(m_pLeft);}
+  virtual AvlTreeNode * GetRight(void){return (AvlTreeNode *)(m_pRight);}
 
   virtual void SetValue(const int &);
-  virtual void SetParent(AvlTreeNode *);
-  virtual void SetLeft(AvlTreeNode *);
-  virtual void SetRight(AvlTreeNode *);
+  virtual void SetParent(AvlTreeNode *parent){m_pParent=parent;}
+  virtual void SetLeft(AvlTreeNode *left){m_pLeft=left;}
+  virtual void SetRight(AvlTreeNode *right){m_pRight=right;}
+
+  int GetHeight(void);
+  void SetHeight(const int & value);
+
+  int GetFactor(void);
+  void SetFactor(const int & value);
 
   ~AvlTreeNode();
 };

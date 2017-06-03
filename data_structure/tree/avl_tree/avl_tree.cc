@@ -1,16 +1,19 @@
-#include<iostream>
-#include"../binary_tree/binary_tree.h"
-#include"avl_tree.h"
+#include <iostream>
+#include "../binary_tree/binary_tree.h"
+#include "avl_tree.h"
 namespace Avl
 {
 using namespace Tree;
 
-AvlTreeNode::AvlTreeNode(const int & value):BinaryTreeNode(value){
-    m_nHeight=0;
-    m_nBalanceFactor=0;
+AvlTreeNode::AvlTreeNode(const int &value) : BinaryTreeNode(value)
+{
+    m_nHeight = 0;
+    m_nBalanceFactor = 0;
 }
 
-AvlTreeNode::~AvlTreeNode(){
+AvlTreeNode::~AvlTreeNode()
+{
+    cout << "distory avltreenode" << endl;
 }
 
 void AvlTree::m_fLeftRotate(AvlTreeNode *node)
@@ -27,30 +30,30 @@ void AvlTree::m_fLeftRotate(AvlTreeNode *node)
 		 */
     AvlTreeNode *x = node;
     AvlTreeNode *p = (AvlTreeNode *)(x->m_pParent);
-    AvlTreeNode *lx = x->m_pLeft;
-    AvlTreeNode *y = x->m_pRight;
-    AvlTreeNode *ly = y->m_pLeft;
-    AvlTreeNode *ry = y->m_pRight;
+    AvlTreeNode *lx = x->GetLeft();
+    AvlTreeNode *y = x->GetRight();
+    AvlTreeNode *ly = y->GetLeft();
+    AvlTreeNode *ry = y->GetRight();
 
-    x->m_pRight = ly;
+    x->SetRight(ly);
     if (ly)
-        ly->m_pParent = x;
-
-    y->m_pParent = p;
+        ly->SetParent(x);
+    
+    y->SetParent(p);
     if (p)
     {
         if (x == p->m_pLeft)
-            p->m_pLeft = y;
+            p->SetLeft(y);
         else
-            p->m_pRight = y;
+            p->SetRight(y);
     }
     else
     {
         m_pRoot = y;
     }
 
-    y->m_pLeft = x;
-    x->m_pParent = y;
+    y->SetLeft(x);
+    x->SetParent(y);
 }
 void AvlTree::m_fRightRotate(AvlTreeNode *node)
 {
@@ -92,16 +95,5 @@ void AvlTree::m_fRightRotate(AvlTreeNode *node)
 
     x->m_pRight = y;
     y->m_pParent = x;
-}
-
-int AvlTree::m_nGetHeight(AvlTreeNode *node)
-{
-    return node->m_nHeight;
-}
-
-void AvlTree::m_nUpdateNodeHeight(AvlTreeNode *node)
-{
-    //continue
-    node->m_nHeight = 1 + max()
 }
 }
