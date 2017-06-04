@@ -3,7 +3,12 @@
 #include <iostream>
 #include <vector>
 #include <queue>
+#include <string>
 #include <algorithm>
+
+std::string int2str(int);
+
+
 namespace Tree
 {
 using namespace std;
@@ -17,19 +22,25 @@ class BinaryTreeNode
     BinaryTreeNode *m_pRight;
 
   public:
-    BinaryTreeNode(const int &);
+    BinaryTreeNode(const int & value){
+      m_nValue=value;
+      m_pParent=nullptr;
+      m_pRight=m_pLeft=nullptr;
+    }
     
-    virtual int GetValue(void);
-    virtual BinaryTreeNode * GetParent(void);
-    virtual BinaryTreeNode * GetLeft(void);
-    virtual BinaryTreeNode * GetRight(void);
+    virtual int getValue(void){return m_nValue;}
+    virtual BinaryTreeNode * getParent(void){return m_pParent;}
+    virtual BinaryTreeNode * getLeft(void){return m_pLeft;}
+    virtual BinaryTreeNode * getRight(void){return m_pRight;}
 
-    virtual void SetValue(const int &);
-    virtual void SetParent(BinaryTreeNode *);
-    virtual void SetLeft(BinaryTreeNode *);
-    virtual void SetRight(BinaryTreeNode *);
+    virtual void setValue(const int & value){m_nValue=value;}
+    virtual void setParent(BinaryTreeNode * parent){m_pParent=parent;}
+    virtual void setLeft(BinaryTreeNode * left){m_pLeft=left;}
+    virtual void setRight(BinaryTreeNode * right){m_pRight=right;}
 
-    ~BinaryTreeNode();
+    ~BinaryTreeNode(){
+      std::cout<<"distory BinaryTreeNode:"<<m_nValue<<endl;
+    }
 };
 
 class BinaryTree
@@ -46,6 +57,7 @@ class BinaryTree
     void m_fInorder(BinaryTreeNode *);
     void m_fPostorder(BinaryTreeNode *);
     void m_fLevel(vector<vector<int>> & result,BinaryTreeNode *node,int level);
+    void m_fDisplay(vector<string> &,BinaryTreeNode *,int);
     void m_fDeleteAllNode(BinaryTreeNode * node,int &);
 
   public:
@@ -55,9 +67,10 @@ class BinaryTree
     void PrintTreeInorder();
     void PrintTreePostorder();
     void PrintTreeLevel();
+    void DisplayTree();
     virtual void InsertNode(const int &);
     virtual void DeleteNode(const int &);
-    int GetNumber(void);
+    int getNumber(void);
 };
 }
 
