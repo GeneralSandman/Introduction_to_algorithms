@@ -1,57 +1,86 @@
 #ifndef AVL_TREE
 #define AVL_TREE
-#include"../binary_tree/binary_tree.h"
+#include<iostream>
+#include<vector>
+#include<string>
 namespace Avl
 {
-using namespace Tree;
-
-class AvlTreeNode : public BinaryTreeNode
+  using namespace std;
+class AvlTreeNode
 {
-public:
+private:
+  int m_nValue;
+  AvlTreeNode *m_pParent;
+  AvlTreeNode *m_pLeft;
+  AvlTreeNode *m_pRight;
   int m_nHeight;
   int m_nBalanceFactor;
 
 public:
-  AvlTreeNode(const int &value);
+  AvlTreeNode(const int &value)
+  {
+    m_nValue = value;
+    m_pParent = m_pRight = m_pLeft = nullptr;
+    m_nHeight = m_nBalanceFactor = 0;
+  }
 
-  virtual int GetValue(void);
-  virtual AvlTreeNode * GetParent(void){return (AvlTreeNode *)(m_pParent);}
-  virtual AvlTreeNode * GetLeft(void){return (AvlTreeNode *)(m_pLeft);}
-  virtual AvlTreeNode * GetRight(void){return (AvlTreeNode *)(m_pRight);}
+  int getValue(void) { return m_nValue; }
+  AvlTreeNode *getParent(void) { return m_pParent; }
+  AvlTreeNode *getLeft(void) { return m_pLeft; }
+  AvlTreeNode *getRight(void) { return m_pRight; }
 
-  virtual void SetValue(const int &);
-  virtual void SetParent(AvlTreeNode *parent){m_pParent=parent;}
-  virtual void SetLeft(AvlTreeNode *left){m_pLeft=left;}
-  virtual void SetRight(AvlTreeNode *right){m_pRight=right;}
+  void setValue(const int &value) { m_nValue = value; }
+  void setParent(AvlTreeNode *parent) { m_pParent = parent; }
+  void setLeft(AvlTreeNode *left) { m_pLeft = left; }
+  void setRight(AvlTreeNode *right) { m_pRight = right; }
 
-  int GetHeight(void);
-  void SetHeight(const int & value);
+  int getHeight(void) { return m_nHeight; }
+  void setHeight(const int &value) { m_nHeight = value; }
 
-  int GetFactor(void);
-  void SetFactor(const int & value);
+  int getFactor(void) { return m_nBalanceFactor; }
+  void setFactor(const int &value) { m_nBalanceFactor = value; }
 
-  ~AvlTreeNode();
+  ~AvlTreeNode()
+  {
+    std::cout << "distory AvlTreeNode:" << m_nValue << std::endl;
+  }
 };
 
-class AvlTree : public BinaryTree
+class AvlTree
 {
 private:
-  void m_fBalance(AvlTreeNode *node);
-  AvlTreeNode *m_fFindMinUnbalanceNode();
+  AvlTreeNode *m_pRoot;
+  int m_nNumber;
+  AvlTreeNode *m_fFindNode(const int &);
+  void m_fDeleteRoot();
+  void m_fDeleteGeneralNode(AvlTreeNode *);
+  AvlTreeNode *m_fFindLeftSubTreeMaxNode(AvlTreeNode *);
+  AvlTreeNode *m_fFindRightSubTreeMinNode(AvlTreeNode *);
+  void m_fPreorder(AvlTreeNode *);
+  void m_fInorder(AvlTreeNode *);
+  void m_fPostorder(AvlTreeNode *);
+  void m_fLevel(vector<vector<int>> &result, AvlTreeNode *node, int level);
+  void m_fDisplay(vector<string> &, AvlTreeNode *, int);
+  void m_fDeleteAllNode(AvlTreeNode *node, int &);
+
+
   void m_fLeftRotate(AvlTreeNode *node);
   void m_fRightRotate(AvlTreeNode *node);
   void m_fRoatLeftRight(AvlTreeNode *node);
   void m_fRoatRightLeft(AvlTreeNode *node);
-  void m_fUpdateNodeHeight(AvlTreeNode *node);
-  void m_fUpdateTreeHeight();
-  void m_fUpdateNodeBalanceFactor(AvlTreeNode *node);
-  void m_fUpdateTreeBalanceFactor();
+
 
 public:
   AvlTree();
   ~AvlTree();
-  virtual void InsertNode(const int &value);
-  virtual void DeleteNode(const int &value);
+  void PrintTreePreorder();
+  void PrintTreeInorder();
+  void PrintTreePostorder();
+  void PrintTreeLevel();
+  void DisplayTree();
+  virtual void InsertNode(const int &);
+  virtual void DeleteNode(const int &);
+  int getNumber(void);
 };
 }
 
