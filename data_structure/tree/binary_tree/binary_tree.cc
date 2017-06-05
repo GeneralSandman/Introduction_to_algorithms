@@ -3,13 +3,15 @@
 #include <string>
 #include "binary_tree.h"
 
-std::string int2str(int value){
+std::string int2str(int value)
+{
     std::string result;
-    
-    while(value){
-        char tmp=(value%10+'0');
-        value/=10;
-        result=tmp+result;
+
+    while (value)
+    {
+        char tmp = (value % 10 + '0');
+        value /= 10;
+        result = tmp + result;
     }
 
     return result;
@@ -37,6 +39,31 @@ BinaryTreeNode *BinaryTree::m_fFindNode(const int &value)
             break;
     }
     return node;
+}
+void BinaryTree::m_fInsertNode(const int &value, BinaryTreeNode *node)
+{
+    if (value < node->getValue())
+    {
+        if (node->getLeft() == nullptr)
+        {
+            BinaryTreeNode *newnode = new BinaryTreeNode(value);
+            newnode->setParent(node);
+            node->setLeft(newnode);
+        }
+        else
+            m_fInsertNode(value, node->getLeft());
+    }
+    else if (value > node->getValue())
+    {
+        if (node->getRight() == nullptr)
+        {
+            BinaryTreeNode *newnode = new BinaryTreeNode(value);
+            newnode->setParent(node);
+            node->setRight(newnode);
+        }
+        else
+            m_fInsertNode(value, node->getRight());
+    }
 }
 
 void BinaryTree::m_fDeleteRoot()
@@ -313,42 +340,15 @@ void BinaryTree::DisplayTree()
 
 void BinaryTree::InsertNode(const int &value)
 {
-    BinaryTreeNode *newNode = new BinaryTreeNode(value);
-    BinaryTreeNode *previous = m_pRoot;
-    BinaryTreeNode *insertPosition = m_pRoot;
-
-    while (insertPosition != nullptr)
+    if (m_pRoot == nullptr)
     {
-        previous = insertPosition;
-        if (value < insertPosition->getValue())
-            insertPosition = insertPosition->getLeft();
-        else if (value == insertPosition->getValue())
-        {
-            cout << "this value exists.\n";
-            goto DONE;
-        }
-        else
-            insertPosition = insertPosition->getRight();
-    }
-
-    if (previous == nullptr)
-    {
-        m_pRoot = newNode;
+        m_pRoot = new BinaryTreeNode(value);
     }
     else
     {
-        if (value < previous->getValue())
-            previous->setLeft(newNode);
-        else
-            previous->setRight(newNode);
-
-        newNode->setParent(previous);
+        m_fInsertNode(value, m_pRoot);
     }
-
     m_nNumber++;
-
-DONE:
-    return;
 }
 
 void BinaryTree::DeleteNode(const int &value)

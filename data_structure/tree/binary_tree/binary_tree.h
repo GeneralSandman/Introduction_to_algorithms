@@ -49,6 +49,7 @@ class BinaryTree
     BinaryTreeNode *m_pRoot;
     int m_nNumber;
     BinaryTreeNode *m_fFindNode(const int &);
+    void m_fInsertNode(const int &,BinaryTreeNode *);
     void m_fDeleteRoot();
     void m_fDeleteGeneralNode(BinaryTreeNode *);
     BinaryTreeNode *m_fFindLeftSubTreeMaxNode(BinaryTreeNode *);
