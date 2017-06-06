@@ -1,5 +1,6 @@
 #include <iostream>
 #include "./binary_tree/binary_tree.h"
+#include "./avl_tree/avl_tree.h"
 //#include "./avl_tree/avl_tree.h"
 
 using namespace std;
@@ -13,17 +14,17 @@ using namespace std;
  */
 
 void BinaryTreeTest(void);
-
+void AvlTreeTest(void);
 int main()
 {
-    BinaryTreeTest();
-
+    AvlTreeTest();
+    //BinaryTreeTest();
     return 0;
 }
 
 void BinaryTreeTest(void)
 {
-     using namespace Tree;
+    using namespace Tree;
     {
         BinaryTree tree;
         tree.InsertNode(15);
@@ -43,24 +44,37 @@ void BinaryTreeTest(void)
         tree.InsertNode(27);
         tree.PrintTreePreorder();
         tree.PrintTreeLevel();
-        tree.DisplayTree();
+        
 
-        tree.DeleteNode(15);
-        tree.PrintTreeLevel();
-
-        tree.DeleteNode(27);
-        tree.PrintTreeLevel();
-
+        tree.DeleteNode(6);
         tree.DeleteNode(12);
-        tree.PrintTreeLevel();
+        tree.DeleteNode(11);
+        tree.DeleteNode(13);
+        
     }
 }
 
-
-
-void BlancedTreeTest(void)
+void AvlTreeTest(void)
 {
-   
+    using namespace Avl;
+    {
+        AvlTree  tree;
+        
+        for(int i=0;i<20;i++)
+            tree.InsertNode(i);
+        tree.PrintTreePreorder();
+        tree.PrintTreeLevel();
+        
+
+        tree.DeleteNode(6);        
+        tree.DeleteNode(12);        
+        tree.DeleteNode(11);
+        tree.DeleteNode(13);
+
+        tree.PrintTreeLevel();
+    }
+
+    
 }
 
 void HuffmanTest(void)

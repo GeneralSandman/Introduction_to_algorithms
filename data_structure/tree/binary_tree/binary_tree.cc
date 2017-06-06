@@ -144,7 +144,10 @@ void BinaryTree::m_fDeleteGeneralNode(BinaryTreeNode *_deletenode)
         if (LeftMaxNode == _deletenode->getLeft())
         {
             LeftMaxNode->setParent(_deletenodeparent);
-            _deletenodeparent->setLeft(LeftMaxNode);
+            if(_deletenodeparent->getLeft()==_deletenode)
+                _deletenodeparent->setLeft(LeftMaxNode);
+            else
+                _deletenodeparent->setRight(LeftMaxNode);
             LeftMaxNode->setRight(_deletenode->getRight());
             _deletenode->getRight()->setParent(LeftMaxNode);
         }

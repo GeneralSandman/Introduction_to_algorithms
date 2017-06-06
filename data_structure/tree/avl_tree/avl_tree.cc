@@ -1,5 +1,6 @@
 #include <iostream>
 #include "avl_tree.h"
+
 namespace Avl
 {
 
@@ -21,6 +22,57 @@ AvlTreeNode *AvlTree::m_fFindNode(const int &value)
             break;
     }
     return node;
+}
+
+void AvlTree::m_fInsertNode(const int &value, AvlTreeNode *node)
+{
+
+    if (value < node->getValue())
+    {
+        if (node->getLeft() == nullptr)
+        {
+            AvlTreeNode *newnode = new AvlTreeNode(value);
+            newnode->setParent(node);
+            node->setLeft(newnode);
+        }
+        else
+            m_fInsertNode(value, node->getLeft());
+
+        if (m_fGetHeight(node->getLeft()) - m_fGetHeight(node->getRight()) == 2)
+        {
+            if (value < node->getLeft()->getValue())
+            {
+                m_fRoatLeftLeft(node);
+            }
+            else
+            {
+                m_fRoatLeftRight(node);
+            }
+        }
+    }
+    else if (value > node->getValue())
+    {
+        if (node->getRight() == nullptr)
+        {
+            AvlTreeNode *newnode = new AvlTreeNode(value);
+            newnode->setParent(node);
+            node->setRight(newnode);
+        }
+        else
+            m_fInsertNode(value, node->getRight());
+
+        if (m_fGetHeight(node->getLeft()) - m_fGetHeight(node->getRight()) == -2)
+        {
+            if (value > node->getRight()->getValue())
+            {
+                m_fRoatRightRight(node);
+            }
+            else
+            {
+                m_fRoatRightLeft(node);
+            }
+        }
+    }
 }
 
 void AvlTree::m_fDeleteRoot()
@@ -101,13 +153,18 @@ void AvlTree::m_fDeleteGeneralNode(AvlTreeNode *_deletenode)
         if (LeftMaxNode == _deletenode->getLeft())
         {
             LeftMaxNode->setParent(_deletenodeparent);
-            _deletenodeparent->setLeft(LeftMaxNode);
+            if (_deletenodeparent->getLeft() == _deletenode)
+                _deletenodeparent->setLeft(LeftMaxNode);
+            else
+                _deletenodeparent->setRight(LeftMaxNode);
             LeftMaxNode->setRight(_deletenode->getRight());
             _deletenode->getRight()->setParent(LeftMaxNode);
         }
         else
         {
+            int tmp=_deletenode->getValue();
             _deletenode->setValue(LeftMaxNode->getValue());
+            LeftMaxNode->setValue(tmp);
             LeftMaxNode->getParent()->setRight(LeftMaxNode->getLeft());
             if (LeftMaxNode->getLeft())
                 LeftMaxNode->getLeft()->setParent(LeftMaxNode->getParent());
@@ -192,7 +249,7 @@ void AvlTree::m_fDisplay(vector<string> &result, AvlTreeNode *node, int level)
             tmp += "      ";
         if (level)
             tmp += "+-----";
-        tmp += int2str(node->getValue());
+        tmp += std::to_string(node->getValue());
 
         result.push_back(tmp);
         m_fDisplay(result, node->getLeft(), level + 1);
@@ -232,6 +289,13 @@ void AvlTree::m_fDeleteAllNode(AvlTreeNode *node, int &deleteNumber)
         m_nNumber--;
         delete node;
     }
+}
+
+int AvlTree::m_fGetHeight(AvlTreeNode *node)
+{
+    if (node == nullptr)
+        return 0;
+    return max(m_fGetHeight(node->getLeft()), m_fGetHeight(node->getRight())) + 1;
 }
 
 AvlTree::AvlTree()
@@ -297,42 +361,15 @@ void AvlTree::DisplayTree()
 
 void AvlTree::InsertNode(const int &value)
 {
-    AvlTreeNode *newNode = new AvlTreeNode(value);
-    AvlTreeNode *previous = m_pRoot;
-    AvlTreeNode *insertPosition = m_pRoot;
-
-    while (insertPosition != nullptr)
+    if (m_pRoot == nullptr)
     {
-        previous = insertPosition;
-        if (value < insertPosition->getValue())
-            insertPosition = insertPosition->getLeft();
-        else if (value == insertPosition->getValue())
-        {
-            cout << "this value exists.\n";
-            goto DONE;
-        }
-        else
-            insertPosition = insertPosition->getRight();
-    }
-
-    if (previous == nullptr)
-    {
-        m_pRoot = newNode;
+        m_pRoot = new AvlTreeNode(value);
     }
     else
     {
-        if (value < previous->getValue())
-            previous->setLeft(newNode);
-        else
-            previous->setRight(newNode);
-
-        newNode->setParent(previous);
+        m_fInsertNode(value, m_pRoot);
     }
-
     m_nNumber++;
-
-DONE:
-    return;
 }
 
 void AvlTree::DeleteNode(const int &value)
@@ -359,6 +396,20 @@ int AvlTree::getNumber(void)
     return m_nNumber;
 }
 
+bool AvlTree::testBalance(void)
+{
+    int balace = abs(m_fGetHeight(m_pRoot->getLeft()) - m_fGetHeight(m_pRoot->getRight()));
+    if (balace > 1)
+        return false;
+    else
+        return true;
+}
+
+void AvlTree::testRoat(void)
+{
+    AvlTreeNode *node = m_fFindNode(10);
+    m_fRoatLeftRight(node);
+}
 void AvlTree::m_fLeftRotate(AvlTreeNode *node)
 {
     /* 
@@ -372,7 +423,7 @@ void AvlTree::m_fLeftRotate(AvlTreeNode *node)
 		 *   ly ry               lx ly 
 		 */
     AvlTreeNode *x = node;
-    AvlTreeNode *p = (AvlTreeNode *)(x->getParent());
+    AvlTreeNode *p = x->getParent();
     AvlTreeNode *lx = x->getLeft();
     AvlTreeNode *y = x->getRight();
     AvlTreeNode *ly = y->getLeft();
@@ -416,7 +467,7 @@ void AvlTree::m_fRightRotate(AvlTreeNode *node)
     AvlTreeNode *p = y->getParent();
     AvlTreeNode *x = y->getLeft();
     AvlTreeNode *lx = x->getLeft();
-    AvlTreeNode *rx = y->getRight();
+    AvlTreeNode *rx = x->getRight();
     AvlTreeNode *ry = y->getRight();
 
     y->setLeft(rx);
@@ -438,5 +489,37 @@ void AvlTree::m_fRightRotate(AvlTreeNode *node)
 
     x->setRight(y);
     y->setParent(x);
+}
+
+void AvlTree::m_fRoatLeftLeft(AvlTreeNode *node)
+{
+    /*
+            x            y
+           / \         /    \
+          y   q       z     x
+         /           /        \
+        z           w           q
+       /
+       w
+      
+      */
+
+    m_fRightRotate(node);
+}
+void AvlTree::m_fRoatLeftRight(AvlTreeNode *node)
+{
+    m_fLeftRotate(node->getLeft());
+    PrintTreeLevel();
+
+    m_fRightRotate(node);
+}
+void AvlTree::m_fRoatRightLeft(AvlTreeNode *node)
+{
+    m_fRightRotate(node->getRight());
+    m_fLeftRotate(node);
+}
+void AvlTree::m_fRoatRightRight(AvlTreeNode *node)
+{
+    m_fLeftRotate(node);
 }
 }
