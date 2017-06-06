@@ -30,3 +30,7 @@
 *.exe
 *.out
 *.app
+
+
+.vscode
+data_structure/tree/test
