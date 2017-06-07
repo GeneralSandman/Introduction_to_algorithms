@@ -54,6 +54,7 @@ private:
   int m_nNumber;
   AvlTreeNode *m_fFindNode(const int &);
   void m_fInsertNode(const int &, AvlTreeNode *);
+  void m_fFixAfterInsert(AvlTreeNode *);
   void m_fDeleteRoot();
   void m_fDeleteGeneralNode(AvlTreeNode *);
   AvlTreeNode *m_fFindLeftSubTreeMaxNode(AvlTreeNode *);

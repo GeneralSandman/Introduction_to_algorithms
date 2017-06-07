@@ -75,6 +75,10 @@ void AvlTree::m_fInsertNode(const int &value, AvlTreeNode *node)
     }
 }
 
+void AvlTree::m_fFixAfterInsert(AvlTreeNode *node){
+
+}
+
 void AvlTree::m_fDeleteRoot()
 {
     AvlTreeNode *_deletenode = m_pRoot;
@@ -162,7 +166,7 @@ void AvlTree::m_fDeleteGeneralNode(AvlTreeNode *_deletenode)
         }
         else
         {
-            int tmp=_deletenode->getValue();
+            int tmp = _deletenode->getValue();
             _deletenode->setValue(LeftMaxNode->getValue());
             LeftMaxNode->setValue(tmp);
             LeftMaxNode->getParent()->setRight(LeftMaxNode->getLeft());
@@ -314,7 +318,6 @@ AvlTree::~AvlTree()
     else
         cout << "delete tree failed\n";
 }
-
 
 bool AvlTree::FindNode(const int &value)
 {
