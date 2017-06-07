@@ -1,12 +1,12 @@
 #ifndef AVL_TREE
 #define AVL_TREE
-#include<iostream>
-#include<vector>
-#include<string>
+#include <iostream>
+#include <vector>
+#include <string>
 std::string int2str(int);
 namespace Avl
 {
-  using namespace std;
+using namespace std;
 class AvlTreeNode
 {
 private:
@@ -53,7 +53,7 @@ private:
   AvlTreeNode *m_pRoot;
   int m_nNumber;
   AvlTreeNode *m_fFindNode(const int &);
-  void m_fInsertNode(const int &,AvlTreeNode *);
+  void m_fInsertNode(const int &, AvlTreeNode *);
   void m_fDeleteRoot();
   void m_fDeleteGeneralNode(AvlTreeNode *);
   AvlTreeNode *m_fFindLeftSubTreeMaxNode(AvlTreeNode *);
@@ -67,25 +67,24 @@ private:
 
   int m_fGetHeight(AvlTreeNode *);
 
-
   void m_fLeftRotate(AvlTreeNode *node);
   void m_fRightRotate(AvlTreeNode *node);
-  void m_fRoatLeftLeft(AvlTreeNode * node);
+  void m_fRoatLeftLeft(AvlTreeNode *node);
   void m_fRoatLeftRight(AvlTreeNode *node);
   void m_fRoatRightLeft(AvlTreeNode *node);
-  void m_fRoatRightRight(AvlTreeNode * node);
-
+  void m_fRoatRightRight(AvlTreeNode *node);
 
 public:
   AvlTree();
   ~AvlTree();
+  bool FindNode(const int &);
   void PrintTreePreorder();
   void PrintTreeInorder();
   void PrintTreePostorder();
   void PrintTreeLevel();
   void DisplayTree();
-  virtual void InsertNode(const int &);
-  virtual void DeleteNode(const int &);
+  void InsertNode(const int &);
+  void DeleteNode(const int &);
   int getNumber(void);
   bool testBalance(void);
   void testRoat(void);

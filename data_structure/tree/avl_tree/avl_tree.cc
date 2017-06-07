@@ -315,6 +315,16 @@ AvlTree::~AvlTree()
         cout << "delete tree failed\n";
 }
 
+
+bool AvlTree::FindNode(const int &value)
+{
+    AvlTreeNode *node = m_fFindNode(value);
+    if (node != nullptr)
+        return true;
+    else
+        return false;
+}
+
 void AvlTree::PrintTreePreorder()
 {
     cout << "preorder: ";

@@ -144,7 +144,7 @@ void BinaryTree::m_fDeleteGeneralNode(BinaryTreeNode *_deletenode)
         if (LeftMaxNode == _deletenode->getLeft())
         {
             LeftMaxNode->setParent(_deletenodeparent);
-            if(_deletenodeparent->getLeft()==_deletenode)
+            if (_deletenodeparent->getLeft() == _deletenode)
                 _deletenodeparent->setLeft(LeftMaxNode);
             else
                 _deletenodeparent->setRight(LeftMaxNode);
@@ -295,6 +295,15 @@ BinaryTree::~BinaryTree()
         cout << "all node are deleted\n";
     else
         cout << "delete tree failed\n";
+}
+
+bool BinaryTree::FindNode(const int &value)
+{
+    BinaryTreeNode *node = m_fFindNode(value);
+    if (node != nullptr)
+        return true;
+    else
+        return false;
 }
 
 void BinaryTree::PrintTreePreorder()
