@@ -24,55 +24,90 @@ RbTreeNode *RbTree::m_fFindNode(const int &value)
     return node;
 }
 
+void RbTree::m_fFixAfterInsert(RbTreeNode *node)
+{
+    RbTreeNode *parent = nullptr, *gparent = nullptr;
+
+    while ((parent = node->getParent()) != nullptr && parent->getColor() == red)
+    {
+        gparent = node->getGParent();
+
+        if (parent == gparent->getLeft())
+        {
+            RbTreeNode *uncle = node->getUncle();
+
+            if (uncle != nullptr && uncle->getColor() == red)
+            {
+                parent->setColor(black);
+                uncle->setColor(black);
+                gparent->setColor(red);
+                node = gparent;
+                continue;
+            }
+
+            if (node == parent->getRight())
+            { //uncle is black && node is parent's right-node
+                m_fLeftRotate(parent);
+                RbTreeNode *tmp = parent;
+                parent = node;
+                node = tmp;
+            }
+
+            parent->setColor(black);
+            gparent->setColor(red);
+            m_fRightRotate(gparent);
+        }
+        else
+        {
+            RbTreeNode *uncle = node->getUncle();
+
+            if (uncle != nullptr && uncle->getColor() == red)
+            {
+                parent->setColor(black);
+                uncle->setColor(black);
+                gparent->setColor(red);
+                node = gparent;
+                continue;
+            }
+
+            if (node == parent->getLeft())
+            {
+                m_fRightRotate(parent);
+                RbTreeNode *tmp = parent;
+                parent = node;
+                node = tmp;
+            }
+
+            parent->setColor(black);
+            gparent->setColor(red);
+            m_fLeftRotate(gparent);
+        }
+    }
+
+    m_pRoot->setColor(black);
+}
+
 void RbTree::m_fInsertNode(const int &value, RbTreeNode *node)
 {
-
-    if (value < node->getValue())
+    RbTreeNode *pre = node, *insert = node;
+    while (insert != nullptr)
     {
-        if (node->getLeft() == nullptr)
-        {
-            RbTreeNode *newnode = new RbTreeNode(value);
-            newnode->setParent(node);
-            node->setLeft(newnode);
-        }
-        else
-            m_fInsertNode(value, node->getLeft());
+        pre = insert;
 
-        if (m_fGetHeight(node->getLeft()) - m_fGetHeight(node->getRight()) == 2)
-        {
-            if (value < node->getLeft()->getValue())
-            {
-                m_fRoatLeftLeft(node);
-            }
-            else
-            {
-                m_fRoatLeftRight(node);
-            }
-        }
+        if (value < insert->getValue())
+            insert = insert->getLeft();
+        else if (value > insert->getValue())
+            insert = insert->getRight();
     }
-    else if (value > node->getValue())
-    {
-        if (node->getRight() == nullptr)
-        {
-            RbTreeNode *newnode = new RbTreeNode(value);
-            newnode->setParent(node);
-            node->setRight(newnode);
-        }
-        else
-            m_fInsertNode(value, node->getRight());
 
-        if (m_fGetHeight(node->getLeft()) - m_fGetHeight(node->getRight()) == -2)
-        {
-            if (value > node->getRight()->getValue())
-            {
-                m_fRoatRightRight(node);
-            }
-            else
-            {
-                m_fRoatRightLeft(node);
-            }
-        }
-    }
+    RbTreeNode *newnode = new RbTreeNode(value);
+    newnode->setParent(pre);
+    if (value < pre->getValue())
+        pre->setLeft(newnode);
+    else if (value > pre->getValue())
+        pre->setRight(newnode);
+
+    m_fFixAfterInsert(newnode);
 }
 
 void RbTree::m_fDeleteRoot()

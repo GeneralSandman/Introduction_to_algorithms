@@ -6,11 +6,11 @@ namespace Rb
 {
 using namespace std;
 
+  typedef enum { red,
+                 black } color;
 class RbTreeNode
 {
 private:
-  typedef enum { red,
-                 black } color;
   color m_nColor;
   int m_nValue;
   RbTreeNode *m_pParent;
@@ -35,6 +35,31 @@ public:
   RbTreeNode *getLeft(void) { return m_pLeft; }
   RbTreeNode *getRight(void) { return m_pRight; }
 
+  RbTreeNode *getGParent(void)
+  {
+    if (getParent())
+      return getParent()->getParent();
+    else
+      return nullptr;
+  }
+
+  RbTreeNode *getUncle(void)
+  {
+    RbTreeNode *parent = getParent(), *gparent = getGParent();
+    if (gparent)
+    {
+      if (parent == gparent->getLeft())
+        return gparent->getRight();
+      else if (parent == gparent->getRight())
+        return gparent->getLeft();
+      else
+        return nullptr;
+    }
+
+    else
+      return nullptr;
+  }
+
   void setColor(color co) { m_nColor = co; }
   void setValue(const int &value) { m_nValue = value; }
   void setParent(RbTreeNode *parent) { m_pParent = parent; }
@@ -49,6 +74,7 @@ private:
   RbTreeNode *m_pRoot;
   int m_nNumber;
   RbTreeNode *m_fFindNode(const int &);
+  void m_fFixAfterInsert(RbTreeNode *);
   void m_fInsertNode(const int &, RbTreeNode *);
   void m_fDeleteRoot();
   void m_fDeleteGeneralNode(RbTreeNode *);
