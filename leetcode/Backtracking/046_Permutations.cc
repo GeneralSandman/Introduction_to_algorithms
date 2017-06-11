@@ -42,7 +42,7 @@ private:
 int main()
 {
     Solution a;
-    vector<int> nums={1,2,3,4};
+    vector<int> nums={1,2,3};
     vector<vector<int>> result=a.permute(nums);
     for(int i=0;i<result.size();i++){
         for(auto t:result[i])
