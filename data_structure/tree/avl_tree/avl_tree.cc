@@ -522,7 +522,7 @@ void AvlTree::m_fRoatLeftLeft(AvlTreeNode *node)
 void AvlTree::m_fRoatLeftRight(AvlTreeNode *node)
 {
     m_fLeftRotate(node->getLeft());
-    PrintTreeLevel();
+    // PrintTreeLevel();
 
     m_fRightRotate(node);
 }

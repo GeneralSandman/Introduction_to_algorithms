@@ -75,9 +75,9 @@ private:
   int m_nNumber;
   RbTreeNode *m_fFindNode(const int &);
   void m_fFixAfterInsert(RbTreeNode *);
+  void m_fFixAfterDelete(RbTreeNode *,RbTreeNode*);
   void m_fInsertNode(const int &, RbTreeNode *);
-  void m_fDeleteRoot();
-  void m_fDeleteGeneralNode(RbTreeNode *);
+  void m_fDeleteNode(RbTreeNode*);
   RbTreeNode *m_fFindLeftSubTreeMaxNode(RbTreeNode *);
   RbTreeNode *m_fFindRightSubTreeMinNode(RbTreeNode *);
   void m_fPreorder(RbTreeNode *);

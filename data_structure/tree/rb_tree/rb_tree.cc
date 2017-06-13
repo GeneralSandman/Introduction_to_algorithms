@@ -110,105 +110,59 @@ void RbTree::m_fInsertNode(const int &value, RbTreeNode *node)
     m_fFixAfterInsert(newnode);
 }
 
-void RbTree::m_fDeleteRoot()
+void RbTree::m_fFixAfterDelete(RbTreeNode *, RbTreeNode *)
 {
-    RbTreeNode *_deletenode = m_pRoot;
-
-    if (_deletenode->getLeft() == nullptr && _deletenode->getRight() == nullptr)
-    {
-        m_pRoot = nullptr;
-    }
-    else if (_deletenode->getLeft() != nullptr && _deletenode->getRight() == nullptr)
-    {
-        m_pRoot = _deletenode->getLeft();
-        m_pRoot->setParent(nullptr);
-    }
-    else if (_deletenode->getLeft() == nullptr && _deletenode->getRight() != nullptr)
-    {
-        m_pRoot = _deletenode->getRight();
-        m_pRoot->setParent(nullptr);
-    }
-    else
-    {
-        RbTreeNode *LeftMaxNode = m_fFindLeftSubTreeMaxNode(m_pRoot);
-        if (LeftMaxNode == _deletenode->getLeft())
-        {
-            LeftMaxNode->setRight(m_pRoot->getRight());
-            m_pRoot->getRight()->setParent(LeftMaxNode);
-            m_pRoot = LeftMaxNode;
-            m_pRoot->setParent(nullptr);
-        }
-        else
-        {
-            int tmp = m_pRoot->getValue();
-            m_pRoot->setValue(LeftMaxNode->getValue());
-            LeftMaxNode->setValue(tmp);
-            LeftMaxNode->getParent()->setRight(LeftMaxNode->getLeft());
-            if (LeftMaxNode->getLeft() != nullptr)
-                LeftMaxNode->getLeft()->setParent(LeftMaxNode->getParent());
-            _deletenode = LeftMaxNode;
-        }
-    }
-
-    delete _deletenode;
-    _deletenode = nullptr;
+    
 }
 
-void RbTree::m_fDeleteGeneralNode(RbTreeNode *_deletenode)
+void RbTree::m_fDeleteNode(RbTreeNode *node)
 {
-    RbTreeNode *_deletenodeparent;
-    _deletenodeparent = _deletenode->getParent();
-
-    if (_deletenode->getLeft() == nullptr && _deletenode->getRight() == nullptr)
-    {
-        if (_deletenode->getValue() < _deletenodeparent->getValue())
-            _deletenodeparent->setLeft(nullptr);
-        else
-            _deletenodeparent->setRight(nullptr);
-    }
-    else if (_deletenode->getLeft() != nullptr && _deletenode->getRight() == nullptr)
-    {
-        if (_deletenode->getValue() < _deletenodeparent->getValue())
-            _deletenodeparent->setLeft(_deletenode->getLeft());
-        else
-            _deletenodeparent->setRight(_deletenode->getLeft());
-        _deletenode->getLeft()->setParent(_deletenodeparent);
-    }
-    else if (_deletenode->getLeft() == nullptr && _deletenode->getRight() != nullptr)
-    {
-        if (_deletenode->getValue() < _deletenodeparent->getValue())
-            _deletenodeparent->setLeft(_deletenode->getRight());
-        else
-            _deletenodeparent->setRight(_deletenode->getRight());
-        _deletenode->getRight()->setParent(_deletenodeparent);
-    }
-    else
-    {
-        RbTreeNode *LeftMaxNode = m_fFindLeftSubTreeMaxNode(_deletenode);
-        if (LeftMaxNode == _deletenode->getLeft())
-        {
-            LeftMaxNode->setParent(_deletenodeparent);
-            if (_deletenodeparent->getLeft() == _deletenode)
-                _deletenodeparent->setLeft(LeftMaxNode);
-            else
-                _deletenodeparent->setRight(LeftMaxNode);
-            LeftMaxNode->setRight(_deletenode->getRight());
-            _deletenode->getRight()->setParent(LeftMaxNode);
-        }
-        else
-        {
-            int tmp = _deletenode->getValue();
-            _deletenode->setValue(LeftMaxNode->getValue());
-            LeftMaxNode->setValue(tmp);
-            LeftMaxNode->getParent()->setRight(LeftMaxNode->getLeft());
-            if (LeftMaxNode->getLeft())
-                LeftMaxNode->getLeft()->setParent(LeftMaxNode->getParent());
-            _deletenode = LeftMaxNode;
-        }
-    }
-
-    delete _deletenode;
-    _deletenode = nullptr;
+     RBNode<T> child, parent;  
+    boolean color;  
+      
+    //1. 被删除的节点“左右子节点都不为空”的情况  
+    if((node.left != null) && (node.right != null)) {  
+        //先找到被删除节点的后继节点，用它来取代被删除节点的位置  
+        RBNode<T> replace = node;  
+        //  1). 获取后继节点  
+        replace = replace.right;  
+        while(replace.left != null)   
+            replace = replace.left;  
+          
+        //  2). 处理“后继节点”和“被删除节点的父节点”之间的关系  
+        if(parentOf(node) != null) { //要删除的节点不是根节点  
+            if(node == parentOf(node).left)   
+                parentOf(node).left = replace;  
+            else  
+                parentOf(node).right = replace;  
+        } else { //否则  
+            this.root = replace;  
+        }  
+          
+        //  3). 处理“后继节点的子节点”和“被删除节点的子节点”之间的关系  
+        child = replace.right; //后继节点肯定不存在左子节点！  
+        parent = parentOf(replace);  
+        color = colorOf(replace);//保存后继节点的颜色  
+        if(parent == node) { //后继节点是被删除节点的子节点  
+            parent = replace;  
+        } else { //否则  
+            if(child != null)   
+                setParent(child, parent);  
+            parent.left = child;  
+            replace.right = node.right;  
+            setParent(node.right, replace);  
+        }  
+        replace.parent = node.parent;  
+        replace.color = node.color; //保持原来位置的颜色  
+        replace.left = node.left;  
+        node.left.parent = replace;  
+          
+        if(color == BLACK) { //4. 如果移走的后继节点颜色是黑色，重新修整红黑树  
+            removeFixUp(child, parent);//将后继节点的child和parent传进去  
+        }  
+        node = null;  
+        return;  
+    }  
 }
 
 RbTreeNode *RbTree::m_fFindLeftSubTreeMaxNode(RbTreeNode *node)
@@ -419,20 +373,16 @@ void RbTree::InsertNode(const int &value)
 void RbTree::DeleteNode(const int &value)
 {
     RbTreeNode *DeleteNode = m_fFindNode(value);
-    if (DeleteNode == nullptr)
+
+    if (DeleteNode != nullptr)
     {
-        cout << "no this value:" << value << endl;
-        return;
-    }
-    else if (DeleteNode == m_pRoot)
-    {
-        m_fDeleteRoot();
+        m_fDeleteNode(DeleteNode);
+        m_nNumber--;
     }
     else
     {
-        m_fDeleteGeneralNode(DeleteNode);
+        cout << "don't exists this value\n";
     }
-    m_nNumber--;
 }
 
 int RbTree::getNumber(void)
@@ -553,7 +503,7 @@ void RbTree::m_fRoatLeftLeft(RbTreeNode *node)
 void RbTree::m_fRoatLeftRight(RbTreeNode *node)
 {
     m_fLeftRotate(node->getLeft());
-    PrintTreeLevel();
+    // PrintTreeLevel();
 
     m_fRightRotate(node);
 }
