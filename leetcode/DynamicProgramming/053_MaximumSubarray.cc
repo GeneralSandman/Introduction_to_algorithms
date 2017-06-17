@@ -9,6 +9,8 @@ class Solution
   public:
     int maxSubArray(vector<int> &nums)
     {
+        if(nums.empty())
+            return 0;
         return fun(nums, 0, nums.size() - 1);
     }
 

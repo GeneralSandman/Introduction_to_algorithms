@@ -112,7 +112,80 @@ void RbTree::m_fInsertNode(const int &value, RbTreeNode *node)
 
 void RbTree::m_fFixAfterDelete(RbTreeNode *, RbTreeNode *)
 {
-    
+    RBNode<T> other;  
+          
+        while((node == null || isBlack(node)) && (node != this.root)) {  
+            if(parent.left == node) { //node是左子节点，下面else与这里的刚好相反  
+                other = parent.right; //node的兄弟节点  
+                if(isRed(other)) { //case1: node的兄弟节点other是红色的  
+                    setBlack(other);  
+                    setRed(parent);  
+                    leftRotate(parent);  
+                    other = parent.right;  
+                }  
+                  
+                //case2: node的兄弟节点other是黑色的，且other的两个子节点也都是黑色的  
+                if((other.left == null || isBlack(other.left)) &&   
+                        (other.right == null || isBlack(other.right))) {  
+                    setRed(other);  
+                    node = parent;  
+                    parent = parentOf(node);  
+                } else {  
+                    //case3: node的兄弟节点other是黑色的，且other的左子节点是红色，右子节点是黑色  
+                    if(other.right == null || isBlack(other.right)) {  
+                        setBlack(other.left);  
+                        setRed(other);  
+                        rightRotate(other);  
+                        other = parent.right;  
+                    }  
+                      
+                    //case4: node的兄弟节点other是黑色的，且other的右子节点是红色，左子节点任意颜色  
+                    setColor(other, colorOf(parent));  
+                    setBlack(parent);  
+                    setBlack(other.right);  
+                    leftRotate(parent);  
+                    node = this.root;  
+                    break;  
+                }  
+            } else { //与上面的对称  
+                other = parent.left;  
+                  
+                if (isRed(other)) {  
+                    // Case 1: node的兄弟other是红色的    
+                    setBlack(other);  
+                    setRed(parent);  
+                    rightRotate(parent);  
+                    other = parent.left;  
+                }  
+  
+                if ((other.left==null || isBlack(other.left)) &&  
+                    (other.right==null || isBlack(other.right))) {  
+                    // Case 2: node的兄弟other是黑色，且other的俩个子节点都是黑色的    
+                    setRed(other);  
+                    node = parent;  
+                    parent = parentOf(node);  
+                } else {  
+  
+                    if (other.left==null || isBlack(other.left)) {  
+                        // Case 3: node的兄弟other是黑色的，并且other的左子节点是红色，右子节点为黑色。    
+                        setBlack(other.right);  
+                        setRed(other);  
+                        leftRotate(other);  
+                        other = parent.left;  
+                    }  
+  
+                    // Case 4: node的兄弟other是黑色的；并且other的左子节点是红色的，右子节点任意颜色  
+                    setColor(other, colorOf(parent));  
+                    setBlack(parent);  
+                    setBlack(other.left);  
+                    rightRotate(parent);  
+                    node = this.root;  
+                    break;  
+                }  
+            }  
+        }  
+        if (node!=null)  
+            setBlack(node);
 }
 
 void RbTree::m_fDeleteNode(RbTreeNode *node)
