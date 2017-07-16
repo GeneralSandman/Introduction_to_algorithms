@@ -11,51 +11,57 @@ class Solution
   public:
     int numTrees(int n)
     {
-        vector<int> tmp(n + 1, 0);
+        if (n <= 2)
+            return n;
+        vector<int> tmp(n + 2, 0);
         vector<vector<int>> res(n + 1, tmp);
 
-        for (int i = 1; i < n + 1; i++)
-            res[i][i] = 1;
+        for (int i = 0; i < n; i++)
+            res[i][i + 1] = 1;
 
-        int i = 1, j = 2;
+        int i = 0, j = 2;
         int tmpj = 2;
-        for (int q = 0; q < n-1; q++)
+        for (int q = 0; q < n; q++)
         {
-            for (int index = i; index <= j; index++)
+            int tmp = res[i][j];
+            for (int index = i; index < j; index++)
             {
-                res[i][j] += find(res, index, i, j);
+                tmp += find(res, index, i, j);
             }
 
-            i++;
-            j++;
-
-            if (j > n)  
+            while (j != n + 1)
             {
-                i = 1;
-                j = ++tmpj;
+                res[i][j] = tmp;
+
+                i++;
+                j++;
             }
+
+            i = 0;
+            j = ++tmpj;
         }
 
-        for (int i = 0; i < n+1; i++)
+        for (int i = 0; i < n + 1; i++)
         {
-            for (int j = 0; j < n+1; j++)
+            for (int j = 0; j < n + 2; j++)
                 cout << res[i][j] << " ";
             cout << endl;
         }
 
-        return res[1][n];
+        return res[0][n];
     }
 
   private:
     int find(vector<vector<int>> &nums, int middle, int begin, int end)
     {
-        return max(nums[begin][middle - 1], 1) * max(nums[middle + 1][end], 1);
+        return max(nums[begin][middle], 1) * max(nums[middle + 1][end], 1);
+        return 0;
     }
 };
 
 int main()
 {
     Solution a;
-    cout << a.numTrees(3) << endl;
+    cout << a.numTrees(4) << endl; //14
     return 0;
 }
