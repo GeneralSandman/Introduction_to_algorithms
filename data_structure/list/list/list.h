@@ -5,25 +5,25 @@
 namespace list
 {
 template <typename T>
-class listNode
+class ListNode
 {
   private:
-    listNode *prev;
-    listNode *next;
-    T value;
+    ListNode *m_pPrev;
+    ListNode *m_pNext;
+    T m_nValue;
 
   public:
-    listNode(const T &v) : value(v), prev(nullptr), next(nullptr) {}
-    listNode *getPrev() { return prev; }
-    listNode *getNext() { return next; }
-    listNode *getValue() { return value; }
+    ListNode(const T &v) : m_nValue(v), m_pPrev(nullptr), m_pNext(nullptr) {}
+    ListNode *getPrev() { return m_pPrev; }
+    ListNode *getNext() { return m_pNext; }
+    ListNode *getValue() { return m_nValue; }
 
-    void setPrev(listNode *node) { prev = node; }
-    void setNext(listNode *node) { next = node; }
-    void setValue(const T &v) { value = value; }
-    ~listNode()
+    void setPrev(ListNode *node) { m_pPrev = node; }
+    void setNext(ListNode *node) { m_pNext = node; }
+    void setValue(const T &v) { m_nValue = m_nValue; }
+    ~ListNode()
     {
-        std::cout << "delete node:" << value << std::endl;
+        std::cout << "delete node:" << m_nValue << std::endl;
     }
 };
 
@@ -31,27 +31,32 @@ template <typename T>
 class List
 {
   private:
-    size_t len;
-    listNode<T> *head;
-    listNode<T> *tail;
+    size_t m_nLen;
+    ListNode<T> *m_pHead;
+    ListNode<T> *m_pTail;
 
   public:
     List();
     void insertNode();
     void deleteNode();
-    void insertNodeHead(listNode<T> *);
-    void insertNodeTail(listNode<T> *);
+    void insertNodeHead(ListNode<T> *);
+    void insertNodeTail(ListNode<T> *);
     List duplict();
-    List findNode(const T &value);
+    List findNode(const T &m_nValue);
     ~List();
 };
 
 template <typename T>
 class Iter
 {
-    listNode<T> *next;
+    ListNode<T> *m_pNext;
     int dirction;
 };
+
+
+template <typename T> List<T>::List():m_nLen{
+
+}
 
 }
 
