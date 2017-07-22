@@ -19,19 +19,33 @@ namespace trie_tree{
     void TrieTree::m_fInsertWord(const string & word){
         TrieTreeNode * cur=m_pRoot;
         for(auto t:word){
-            if(cur->m_pChild[m_fHashIndex(t)]==nullptr){
+            if(!cur->m_pChild[m_fHashIndex(t)]){
                 cur->m_pChild[m_fHashIndex(t)]=new TrieTreeNode();
                 cur->m_nChildNumber++;
             }
-
             cur=cur->m_pChild[m_fHashIndex(t)];
         }
-
         cur->m_nTerm=true;
     }
 
-    bool TrieTree::m_fDeleteWord(const string &word,TrieTreeNode *cur,bool &result){
-        
+    bool TrieTree::m_fDeleteWord(const string &word,int begin,int end,TrieTreeNode *cur,bool &result){
+        if(begin==end){
+            result=cur->m_nTerm;
+            cur->m_nTerm=false;
+            return cur->m_nChildNumber==0;
+        }
+        if(cur->m_pChild[m_fHashIndex(word[begin])]==nullptr){
+            result=false;
+            return false;
+        }
+        else if(m_fDeleteWord(word,(++begin)--,end,cur->m_pChild[m_fHashIndex(word[begin])],result)){
+            delete cur->m_pChild[m_fHashIndex(word[begin])];
+            cur->m_pChild[m_fHashIndex(word[begin])]=nullptr;
+            if(--cur->m_nChildNumber==0 && cur->m_nTerm==false)
+                return true;
+        }
+
+        return false;
     }
 
     bool TrieTree::m_fClear(TrieTreeNode *cur){
@@ -65,7 +79,7 @@ namespace trie_tree{
     }
 
     TrieTree::TrieTree(){
-        m_pRoot=nullptr;
+        m_pRoot=new TrieTreeNode();
     }
 
     bool TrieTree::findWord(const string & word){
@@ -77,8 +91,8 @@ namespace trie_tree{
     }
 
     bool TrieTree::deleteWord(const string & word){
-        bool result;
-        m_fDeleteWord(word,m_pRoot,result);
+        bool result=false;
+        m_fDeleteWord(word,0,word.size(),m_pRoot,result);
         return result;
     }
 
