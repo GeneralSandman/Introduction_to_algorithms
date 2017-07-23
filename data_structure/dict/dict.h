@@ -2,6 +2,7 @@
 #define DICT_H
 #include<string>
 #include<cstring>
+#include<iostream>
 namespace dict{
 	using namespace std;
 
@@ -34,6 +35,9 @@ namespace dict{
 				DictTable(size_t size=2);
 				bool insertPair(const K&,const V&);
                 V findPair(const K&);
+				bool deletePair(const K&);
+
+				V operator[](const K&);
 				~DictTable();
 
             private:
@@ -107,7 +111,8 @@ namespace dict{
 				find=new DictEntry<K,V> ();
                 find->m_nKey=k;
                 find->m_pNext=m_pTable[index];
-                m_pTable[index]=find;                
+                m_pTable[index]=find; 
+				m_nUsed++;				               
 			}
 			return find;
 		}
@@ -121,29 +126,45 @@ namespace dict{
 		}
 
     template<typename K,typename V>
-		auto DictTable<K,V>::findPair(const K&k) ->V{
+		V DictTable<K,V>::findPair(const K&k){
             DictEntry<K, V> *find=m_fFindEntry(k);
-            if(find==nullptr)
-                return V();
+            if(find==nullptr){
+				V tmp;
+				return tmp;
+			}
             else if(find->m_nKey==k)
                 return find->m_nValue;
         }
 
+	template<typename K,typename V>
+		V DictTable<K,V>::operator[](const K&k){
+			return findPair(k);
+		}
+	template<typename K,typename V>
+		bool DictTable<K,V>::deletePair(const K&k){
+            //delete
+						
+		}
+	
 
 	template<typename K,typename V>
 		DictTable<K,V>::~DictTable(){
+			int tmp=0;
 			for(int i=0;i<m_nSize;i++)
 			{
 				if(m_pTable[i]){
 					DictEntry<K,V> *cur=m_pTable[i],*pre=cur;
-					while(cur){
+					while(pre){
+						cur=cur->m_pNext;						
+						tmp++;
 						delete pre;
 						pre=cur;
-						cur=cur->m_pNext;
 					}
 				}
-			}
 
+				m_pTable[i]=nullptr;
+			}
+			std::cout<<"dalete "<<tmp<<" entry\n";
 			delete m_pTable;
 			m_pTable=nullptr;
 			m_nSize=0;

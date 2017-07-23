@@ -4,15 +4,29 @@
 using namespace std;
 using namespace dict;
 int main(){
+
+    {
+
     DictTable<string,string> table;
-    table.insertPair("lizhenhu","lizhenhu");
-    // cout<<table.findPair("lizhenhu")<<endl;
-    // cout<<table.findPair("li")<<endl;
+    table.insertPair("li","lizhenhu");
+    cout<<table.findPair("li")<<endl;
+    cout<<table["li"]<<endl;
+    cout<<endl;
 
-    			unsigned int hash=hashFunction("lizhenhu");
-			unsigned int index=hash%2;
+    table.insertPair("li","qqq");
+    cout<<table.findPair("li")<<endl;
+    cout<<table["li"]<<endl;
 
-            cout<<hash<<endl<<index<<endl;
+    for(int i=0;i<10;i++)
+        table.insertPair(to_string(i),to_string(i));
+    
+    cout<<"used "<<table.m_nUsed<<endl;
+
+    for(int i=0;i<10;i++)
+        cout<<table[to_string(i)]<<endl;
+
+    }
+
 
 
     return 0;
