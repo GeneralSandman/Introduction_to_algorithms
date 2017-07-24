@@ -15,7 +15,7 @@ public:
         if(i<0 || j<0 || i>=num.size() || j>=num.size() || i>j)
             return 0;
         int result=0;
-        for(int in=i;in<j;in++)
+        for(int in=i;in<=j;in++)
             result+=num[in];
         return result;
     }
