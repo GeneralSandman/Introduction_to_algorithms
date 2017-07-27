@@ -15,7 +15,7 @@ header = {
                 .36 (KHTML, like Gecko) Chrome/55.0.2883.75 Safari/537.36',
     'host': 'leetcode.com',
     'cookie': 'LEETCODE_SESSION=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkdlbmVyYWxTYW5kIiwidXNlcl9zbHVnIjoiZ2VuZXJhbHNhbmQiLCJfYXV0aF91c2VyX2lkIjoiNTMyNTk0IiwidGltZXN0YW1wIjoiMjAxNy0wNi0wMSAwMzoxMDoxNC40NDQ0MDQrMDA6MDAiLCJfYXV0aF91c2VyX2JhY2tlbmQiOiJkamFuZ28uY29udHJpYi5hdXRoLmJhY2tlbmRzLk1vZGVsQmFja2VuZCIsImlkIjo1MzI1OTQsIl9zZXNzaW9uX2V4cGlyeSI6MTIwOTYwMCwiX2F1dGhfdXNlcl9oYXNoIjoiZWZmMzc4NTYxNzUxZjE4MTU0YjBlOTY3YjI2ZTBjZTI5Y2MyYzRiOSIsImVtYWlsIjoiR2VuZXJhbFNhbmRtYW5AMTYzLmNvbSJ9.s5WPyuKDJpkEAVNWL0T6um2sNPTYWrrBrlSl5MNuPmE; OUTFOX_SEARCH_USER_ID_NCOO=1040168174.529293; __atuvc=2%7C20%2C0%7C21%2C1%7C22%2C12%7C23%2C3%7C24; __atuvs=593cf99088001a95002; csrftoken=AiTc6aov9S3LYDooJjVXXwsnfyUDEV4hKZuRHT4RHZQVri0tvcdd5hgtvwoAOhlT; _ga=GA1.2.450060489.1494932433; _gid=GA1.2.233126529.1496999381'}
-url = 'https://leetcode.com/tag/dynamic-programming/'
+url = 'https://leetcode.com/tag/breadth-first-search/'
 request = urllib2.Request(url, headers=header)
 response = urllib2.urlopen(request)
 page = response.read()
