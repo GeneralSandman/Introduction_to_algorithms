@@ -12,6 +12,7 @@ class Solution
     int ladderLength(string beginWord, string endWord, vector<string> &wordList)
     {
         vector<string> cur_level, next_level;
+        wordList.push_back(endWord);
         cur_level.push_back(beginWord);
         int depth = 1;
         int len = beginWord.size();
@@ -49,6 +50,9 @@ class Solution
 int main()
 {
     Solution a;
-
+    string beginWord="hit";
+    string endWord="cog";
+    vector<string> wordList={"hot","dot","dog","lot","log","cog"};
+    cout<<a.ladderLength(beginWord,endWord,wordList)<<endl;
     return 0;
 }
