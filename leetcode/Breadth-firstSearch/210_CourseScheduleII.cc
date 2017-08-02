@@ -63,48 +63,33 @@ class Solution
 };
 
 //DFS
-class Solution2
-{
-  public:
-    vector<int> findOrder(int numCourses, vector<pair<int, int>> &prerequisites)
-    {
-        vector<int> result;
-        if (numCourses == 0)
-            return result;
-
-        vector<set<int>> graph(numCourses);
-        vector<bool> visited(numCourses, false), onpath(numCourses, false);
-        makeGraph(prerequisites, graph);
-
+class Solution2 {
+public:
+    vector<int> findOrder(int numCourses, vector<pair<int, int>>& prerequisites) {
+        vector<set<int>> graph = make_graph(numCourses, prerequisites);
+        vector<int> toposort;
+        vector<bool> onpath(numCourses, false), visited(numCourses, false);
         for (int i = 0; i < numCourses; i++)
-        {
-            if (!visited[i] && dfs(graph, i, visited, onpath,result))
+            if (!visited[i] && dfs(graph, i, onpath, visited, toposort))
                 return {};
-        }
-
-        reverse(result.begin(),result.end());
-        return result;
+        reverse(toposort.begin(), toposort.end());
+        return toposort;
     }
-
-  private:
-    void makeGraph(vector<pair<int, int>> &prerequisites, vector<set<int>> &res)
-    {
-        for (auto t : prerequisites)
-            res[t.second].insert(t.first);
+private:
+    vector<set<int>> make_graph(int numCourses, vector<pair<int, int>>& prerequisites) {
+        vector<set<int>> graph(numCourses);
+        for (auto pre : prerequisites)
+            graph[pre.second].insert(pre.first);
+        return graph;
     }
-
-    bool dfs(vector<set<int>> &graph, int node, vector<bool> &visited, vector<bool> &onpath,vector<int> &result)
-    {
-        onpath[node] = visited[node] = true;
-        for (auto t : graph[node])
-        {
-            if (onpath[t] || dfs(graph, t, visited, onpath,result))
-                return true; //have cycle
-        }
-        result.push_back(node);
-
-        onpath[node] = false; //recover the onpath[node]
-        return false;
+    bool dfs(vector<set<int>>& graph, int node, vector<bool>& onpath, vector<bool>& visited, vector<int>& toposort) { 
+        if (visited[node]) return false;
+        onpath[node] = visited[node] = true; 
+        for (int neigh : graph[node])
+            if (onpath[neigh] || dfs(graph, neigh, onpath, visited, toposort))
+                return true;
+        toposort.push_back(node);
+        return onpath[node] = false;
     }
 };
 
