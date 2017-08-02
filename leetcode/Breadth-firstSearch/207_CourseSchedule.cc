@@ -60,13 +60,13 @@ class Solution2
         if (!numCourses)
             return false;
 
-        vector<set<int>> graph(numCourses); //first:course second:needed
+        vector<set<int>> graph(numCourses); //first:course second:courses need first
         vector<bool> visited(numCourses, false), onpath(numCourses, false);
         makeGraph(prerequisites, graph);
 
         for(int i=0;i<numCourses;i++){
             if(!visited[i] && dfs(graph,i,visited,onpath))
-                
+                return false;
         }
 
         return true;
@@ -82,14 +82,18 @@ class Solution2
     bool dfs(vector<set<int>>&graph,int node,vector<bool>&visited,vector<bool>&onpath){
         onpath[node]=visited[node]=true;
         for(auto t:graph[node]){
-            if(dfs(graph,t,visited,onpath))
+            if(onpath[t] || dfs(graph,t,visited,onpath))
+                return true;//have cycle
         }
+
+        onpath[node]=false;//recover the onpath[node]
+        return false;
     }
 };
 
+
+
 int main()
 {
-    Solution a;
 
-    return 0;
 }
