@@ -2,6 +2,8 @@
 #define LIST_H
 #include <iostream>
 
+#define AL_START_HEAD 0
+#define AL_START_TAIL 1
 namespace list
 {
 
@@ -31,7 +33,7 @@ public:
 template <typename T>
 class List
 {
-private:
+public:
   size_t m_nLen;
   ListNode<T> *m_pHead;
   ListNode<T> *m_pTail;
@@ -44,18 +46,31 @@ public:
   bool addNodeHead(ListNode<T> *);
   bool addNodeTail(ListNode<T> *);
   List dupLict();
-  List findNode(const T &m_nValue);
+  ListNode<T> *findNode(const T &m_nValue);
+  ListNode<T> *findNodeIndex(long index);
   ~List();
 };
 
 template <typename T>
-class Iter
+class ListIter
 {
+public:
+  List<T> *m_pList;
   ListNode<T> *m_pNext;
-  int dirction;
+  int m_nDirction;
+
+public:
+  ListIter(List<T> *list, int di);
+  void listRewindHead();
+  void listRewindTail();
+  ListNode<T> *getListNext();
+  ~ListIter()
+  {
+    m_pList = m_pNext = nullptr;
+  }
 };
 
-// api-------------------
+// List api-------------------
 template <typename T>
 List<T>::List()
 {
@@ -96,8 +111,18 @@ bool List<T>::insertNode(ListNode<T> *newnode, ListNode<T> *oldnode, int after)
 }
 
 template <typename T>
-bool List<T>::deleteNode(ListNode<T> *node){
-  
+bool List<T>::deleteNode(ListNode<T> *node)
+{
+
+  if (node->m_pPrev)
+    node->m_pPrev->m_pNext = node->m_pNext;
+  else //delete head
+    m_pHead = node->m_pNext;
+
+  if (node->m_pNext)
+    node->m_pNext->m_pPrev = node->m_pPrev;
+  else //delete tail
+    m_pTail = node->m_pPrev;
 
   m_nLen--;
   return true;
@@ -143,6 +168,60 @@ bool List<T>::addNodeTail(ListNode<T> *node)
 }
 
 template <typename T>
+List<T> List<T>::dupLict()
+{
+}
+
+template <typename T>
+ListNode<T> *List<T>::findNode(const T &v)
+{
+  ListNode<T> *res;
+  res = m_pHead;
+  while (res != nullptr)
+  {
+    if (res->m_nValue == v)
+      break;
+    else
+    {
+      res = res->m_pNext;
+    }
+  }
+
+  return res;
+}
+
+template <typename T>
+ListNode<T> *List<T>::findNodeIndex(long index)
+{
+  ListNode<T> *res = nullptr;
+  if (index >= 0)
+  {
+    if (index >= m_nLen)
+      return nullptr;
+    res = m_pHead;
+    while (index)
+    {
+      index--;
+      res = res->m_pNext;
+    }
+  }
+  else
+  {
+    index = -index - 1;
+    if (index >= m_nLen)
+      return nullptr;
+    res = m_pTail;
+    while (index)
+    {
+      index--;
+      res = res->m_pPrev;
+    }
+  }
+
+  return res;
+}
+
+template <typename T>
 List<T>::~List()
 {
   size_t len = getLen();
@@ -156,6 +235,51 @@ List<T>::~List()
     cur = next;
   }
 }
+//end List
+
+//ListIter  api--------
+template <typename T>
+ListIter<T>::ListIter(List<T> *list, int di)
+{
+  m_pList = list;
+  m_nDirction = di;
+  if (di == AL_START_HEAD)
+    m_pNext = list->m_pHead;
+  else
+    m_pNext = list->m_pTail;
+}
+
+template <typename T>
+void ListIter<T>::listRewindHead()
+{
+  m_pNext = m_pList->m_pHead;
+  m_nDirction = AL_START_HEAD;
+}
+
+template <typename T>
+void ListIter<T>::listRewindTail()
+{
+  m_pNext = m_pList->m_pTail;
+  m_nDirction = AL_START_TAIL;
+}
+
+template <typename T>
+ListNode<T> *ListIter<T>::getListNext()
+{
+  ListNode<T> *res = m_pNext;
+
+  if (res != nullptr)
+  {
+    if (m_nDirction == AL_START_HEAD)
+      m_pNext = res->m_pNext;
+    else
+      m_pNext = res->m_pPrev;
+  }
+
+  return res;
+}
+
+//end ListIter
 }
 
 #endif
