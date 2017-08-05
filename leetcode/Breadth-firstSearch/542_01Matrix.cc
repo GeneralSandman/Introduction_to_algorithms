@@ -3,6 +3,7 @@
 #include <string>
 #include <iterator>
 #include <algorithm>
+#include <climits>
 
 using namespace std;
 
@@ -21,13 +22,15 @@ class Solution
         vector<int> tmp(n, -1);
         vector<vector<int>> result(m, tmp);
 
+        // cout<<result.size()<<" "<<result[0].size()<<endl;
+
         for (int i = 0; i < m; i++)
             for (int j = 0; j < n; j++)
             {
-                if (matrix[i][j])
+                if (matrix[i][j] && result[i][j] == -1)
                     dfs(result, matrix, i, j, m, n);
                 else
-                    result[i][j]=0;
+                    result[i][j] = 0;
             }
 
         return result;
@@ -37,51 +40,64 @@ class Solution
     void dfs(vector<vector<int>> &res, vector<vector<int>> &matrix,
              int i, int j, int m, int n)
     {
-        if (checkZero(matrix, i, j, m, n))
-            res[i][j] = 1;
-        else
+        if (matrix[i][j] == 0)
         {
-            if (i > 0)
-            {
-                dfs(res, matrix, i - 1, j, m, n);
-                res[i][j] = min(res[i][j], res[i - 1][j]);
-            }
-            if (j > 0)
-            {
-                dfs(res, matrix, i, j - 1, m, n);
-                res[i][j] = min(res[i][j], res[i][j - 1]);
-            }
-            if (i < m - 1)
-            {
-                dfs(res, matrix, i + 1, j, m, n);
-                res[i][j] = min(res[i][j], res[i + 1][j]);
-            }
-            if (j < n - 1)
-            {
-                dfs(res, matrix, i, j + 1, m, n);
-                res[i][j] = min(res[i][j], res[i][j + 1]);
-            }
+            res[i][j] = 0;
+            return;
         }
-    }
 
-  private:
-    bool checkZero(vector<vector<int>> &matrix,
-                   int i, int j, int m, int n)
-    {
-        if (i > 0 && matrix[i - 1][j] == 0)
-            return true;
-        if (j > 0 && matrix[i][j - 1] == 0)
-            return true;
-        if (i < m - 1 && matrix[i + 1][j] == 0)
-            return true;
-        if (j < n - 1 && matrix[i][j + 1] == 0)
-            return true;
+        int min_ = INT_MAX;
+        if (i > 0)
+        {
+            if (res[i - 1][j] == -1)
+                dfs(res, matrix, i - 1, j, m, n);
+            min_ = min(min_, res[i - 1][j] + 1);
+        }
+        if (j > 0)
+        {
+            if (res[i][j - 1] == -1)
+                dfs(res, matrix, i, j - 1, m, n);
+            min_ = min(min_, res[i][j - 1] + 1);
+        }
+        if (i < m - 1)
+        {
+            if (res[i + 1][j] == -1)
+                dfs(res, matrix, i + 1, j, m, n);
+            min_ = min(min_, res[i + 1][j] + 1);
+        }
+        if (j < n - 1)
+        {
+            if (res[i][j + 1] == -1)
+                dfs(res, matrix, i, j + 1, m, n);
+            min_ = min(min_, res[i][j + 1] + 1);
+        }
+
+        res[i][j] = min_;
     }
 };
 
 int main()
 {
     Solution a;
+    vector<vector<int>> v;
+    vector<int> tm1 = {0, 0, 0};
+    vector<int> tm2 = {0, 0, 0};
+    vector<int> tm3 = {1, 1, 1};
+
+    v.push_back(tm1);
+    v.push_back(tm2);
+    v.push_back(tm3);
+
+    vector<vector<int>> res = a.updateMatrix(v);
+
+    for (auto t : res)
+    {
+        for (auto i : t)
+        {
+            cout << i << " ";
+        }
+        cout << endl;
+    }
 
     return 0;
 }
