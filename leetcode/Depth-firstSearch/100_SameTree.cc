@@ -14,14 +14,18 @@ struct TreeNode
     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
 };
 
-
 class Solution {
 public:
-    void flatten(TreeNode* root) {
-        
+    bool isSameTree(TreeNode* p, TreeNode* q) {
+        if(p==nullptr && q==nullptr)
+            return true;
+        else if(p==nullptr || q==nullptr)
+            return false;
+        else{
+            return p->val==q->val && isSameTree(p->left,q->left) &&isSameTree(p->right,q->right);
+        }
     }
 };
-
 
 int main(){
     Solution a;
