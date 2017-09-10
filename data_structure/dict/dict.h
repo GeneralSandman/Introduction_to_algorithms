@@ -56,8 +56,13 @@ namespace dict{
 
 	template<typename K,typename V>    
 		class Dict{
+			private:
+				std::string m_nDictName;
 			public:
 				DictFunctor<K> * m_pFunctor;
+
+				Dict(std::string&name):m_nDictName(name){};
+				
 
 		};
 
