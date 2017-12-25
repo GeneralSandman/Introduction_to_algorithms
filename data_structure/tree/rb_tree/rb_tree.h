@@ -4,10 +4,9 @@
 #include <vector>
 namespace Rb
 {
-using namespace std;
-
-  typedef enum { red,
-                 black } color;
+typedef enum { red,
+               black } color;
+class RbTree;
 class RbTreeNode
 {
 private:
@@ -18,23 +17,17 @@ private:
   RbTreeNode *m_pRight;
 
 public:
-  RbTreeNode(const int &value, const color &co = red)
+  RbTreeNode(const int &value, color co = red)
   {
     m_nColor = co;
     m_nValue = value;
     m_pParent = m_pLeft = m_pRight = nullptr;
+    std::cout << "class RbTreeNode constructor" << std::endl;
   }
   ~RbTreeNode()
   {
-    std::cout << "distory RbTreeNode:" << m_nValue << std::endl;
+    std::cout << "class RbTreeNode destructor" << std::endl;
   }
-
-  color getColor(void) { return m_nColor; }
-  int getValue(void) { return m_nValue; }
-  RbTreeNode *getParent(void) { return m_pParent; }
-  RbTreeNode *getLeft(void) { return m_pLeft; }
-  RbTreeNode *getRight(void) { return m_pRight; }
-
   RbTreeNode *getGParent(void)
   {
     if (getParent())
@@ -60,31 +53,26 @@ public:
       return nullptr;
   }
 
-  void setColor(color co) { m_nColor = co; }
-  void setValue(const int &value) { m_nValue = value; }
-  void setParent(RbTreeNode *parent) { m_pParent = parent; }
-  void setLeft(RbTreeNode *left) { m_pLeft = left; }
-  void setRight(RbTreeNode *right) { m_pRight = right; }
+  friend class RbTree;
 };
 
 class RbTree
 {
-
 private:
   RbTreeNode *m_pRoot;
   int m_nNumber;
   RbTreeNode *m_fFindNode(const int &);
   void m_fFixAfterInsert(RbTreeNode *);
-  void m_fFixAfterDelete(RbTreeNode *,RbTreeNode*);
+  void m_fFixAfterDelete(RbTreeNode *, RbTreeNode *);
   void m_fInsertNode(const int &, RbTreeNode *);
-  void m_fDeleteNode(RbTreeNode*);
+  void m_fDeleteNode(RbTreeNode *);
   RbTreeNode *m_fFindLeftSubTreeMaxNode(RbTreeNode *);
   RbTreeNode *m_fFindRightSubTreeMinNode(RbTreeNode *);
   void m_fPreorder(RbTreeNode *);
   void m_fInorder(RbTreeNode *);
   void m_fPostorder(RbTreeNode *);
-  void m_fLevel(vector<vector<int>> &result, RbTreeNode *node, int level);
-  void m_fDisplay(vector<string> &, RbTreeNode *, int);
+  void m_fLevel(std::vector<std::vector<int>> &result, RbTreeNode *node, int level);
+  void m_fDisplay(std::vector<std::string> &, RbTreeNode *, int);
   void m_fDeleteAllNode(RbTreeNode *node, int &);
 
   int m_fGetHeight(RbTreeNode *);
