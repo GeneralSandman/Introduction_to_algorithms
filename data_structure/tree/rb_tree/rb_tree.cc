@@ -1,5 +1,5 @@
 #include <iostream>
-#include "rb_tree.h"
+#include "rbtree.h"
 
 namespace Rb
 {
@@ -48,9 +48,9 @@ void RbTree::m_fFixAfterInsert(RbTreeNode *node)
             if (node == parent->getRight())
             { //uncle is black && node is parent's right-node
                 m_fLeftRotate(parent);
-                RbTreeNode *tmp = parent;
-                parent = node;
-                node = tmp;
+                RbTreeNode *tmp = parent;//!
+                parent = node;//!
+                node = tmp;//!
             }
 
             parent->setColor(black);
@@ -73,9 +73,9 @@ void RbTree::m_fFixAfterInsert(RbTreeNode *node)
             if (node == parent->getLeft())
             {
                 m_fRightRotate(parent);
-                RbTreeNode *tmp = parent;
-                parent = node;
-                node = tmp;
+                RbTreeNode *tmp = parent;//!
+                parent = node;//!
+                node = tmp;//!
             }
 
             parent->setColor(black);
@@ -477,6 +477,7 @@ void RbTree::testRoat(void)
     RbTreeNode *node = m_fFindNode(10);
     m_fRoatLeftRight(node);
 }
+
 void RbTree::m_fLeftRotate(RbTreeNode *node)
 {
     /* 
@@ -501,6 +502,7 @@ void RbTree::m_fLeftRotate(RbTreeNode *node)
         ly->setParent(x);
 
     y->setParent(p);
+    
     if (p)
     {
         if (x == p->getLeft())
@@ -516,6 +518,7 @@ void RbTree::m_fLeftRotate(RbTreeNode *node)
     y->setLeft(x);
     x->setParent(y);
 }
+
 void RbTree::m_fRightRotate(RbTreeNode *node)
 {
     /* 
