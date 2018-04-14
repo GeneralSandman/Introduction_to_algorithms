@@ -1,92 +1,93 @@
 #include <iostream>
+#include <vector>
 #include <string>
+#include <cstring>
+#include <algorithm>
+#include <map>
+#include <set>
+#include <queue>
+#include <deque>
+#include <stdio.h>
+#include <cmath>
+#include <stack>
 
 using namespace std;
-#include <vector>
-#include <climits>
-
-class Solution
+class TrieNode
 {
   public:
-    vector<int> GetLeastNumbers_Solution(vector<int> input, int k)
+    bool isKey;
+    TrieNode *children[26];
+    TrieNode() : isKey(false)
     {
-        vector<int> result;
-        if (input.empty())
-            return result;
-        if (input.size() < k)
-            return result;
-
-        result.reserve(k);
-        Heap = new int[k];
-        for (int i = 0; i < k; i++)
-            *(Heap + i) = INT_MAX;
-        n = k;
-        for (auto t : input)
-        {
-            insert(t);
-        }
-
-        for (int i=0;i<k;i++)
-            cout<<*(Heap+i)<<" ";
-        cout << endl;
-
-        for (int i = k; i >0; i--)
-            result.insert(result.begin(), popMax(i));
-
-        delete[] Heap;
-        Heap = nullptr;
-        return result;
-    }
-
-  private:
-    int *Heap;
-    int n;
-    void insert(int num)
-    {
-        if (num < *Heap)
-        {
-            *Heap = num;
-            adjust(n);
-        }
-    }
-
-    void adjust(int end)
-    {
-        int i = 0;
-        int son = 2 * i + 1;
-
-        while (son < end)
-        {
-            if (son + 1 < end)
-            {
-                if (*(Heap + son + 1) > *(Heap + son))
-                    son++;
-            }
-            if (*(Heap + i) >= *(Heap + son))
-                break;
-            swap(*(Heap + i), *(Heap + son));
-            i = son;
-            son = 2 * i + 1;
-        }
-    }
-    int popMax(int end)
-    {
-        int res = *Heap;
-        swap(*Heap, *(Heap + end - 1));
-        adjust(end - 1);
-        return res;
+        memset(children, NULL, sizeof(TrieNode *) * 26);
     }
 };
 
+class WordDictionary
+{
+  public:
+    WordDictionary()
+    {
+        root = new TrieNode();
+    }
+
+    // Adds a word into the data structure.
+    void addWord(string word)
+    {
+        TrieNode *run = root;
+        for (char c : word)
+        {
+            if (!(run->children[c - 'a']))
+                run->children[c - 'a'] = new TrieNode();
+            run = run->children[c - 'a'];
+        }
+        run->isKey = true;
+    }
+
+    // Returns if the word is in the data structure. A word could
+    // contain the dot character '.' to represent any one letter.
+    bool search(string word)
+    {
+        return query(word.c_str(), root);
+    }
+
+  private:
+    TrieNode *root;
+
+    bool query(const char *word, TrieNode *node)
+    {
+        TrieNode *run = node;
+        for (int i = 0; word[i]; i++)
+        {
+            if (run && word[i] != '.')
+                run = run->children[word[i] - 'a'];
+            else if (run && word[i] == '.')
+            {
+                TrieNode *tmp = run;
+                for (int j = 0; j < 26; j++)
+                {
+                    run = tmp->children[j];
+                    if (query(word + i + 1, run))
+                        return true;
+                }
+            }
+            else
+                break;
+        }
+        return run && run->isKey;
+    }
+};
+
+// Your WordDictionary object will be instantiated and called as such:
+// WordDictionary wordDictionary;
+// wordDictionary.addWord("word");
+// wordDictionary.search("pattern");
+
 int main()
 {
-    class Solution s;
-    vector<int> result;
-    vector<int> nums = {4, 5, 1, 6, 2, 7, 3, 8};
-    result = s.GetLeastNumbers_Solution(nums, 4);
-
-    for (auto t : result)
-        cout << t << endl;
+    int n;
+    cin >> n;
+    cout << fun(1, n) << endl;
 
     return 0;
 }

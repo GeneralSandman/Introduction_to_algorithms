@@ -1,150 +1,162 @@
 #include <iostream>
 #include <vector>
+#include <string>
+#include <cstring>
+#include <algorithm>
+#include <map>
+#include <queue>
 #include <stack>
+#include <stdio.h>
 #include <climits>
-#define inf INT_MAX
+
 using namespace std;
-struct street{
+
+typedef struct street
+{
     int end;
-    int dis;
-    int cost;   
-};
-int Dijkstra(vector<vector<street> >& map,int start,int end,int n,vector<int>& preNode)
-{//n代表城市个数
-    //dis
-    vector<int> fromStartDis;//所走路径长度存储数组
-    vector<int> fromStartCost;//用时存储数组
-    vector<bool> visited;//访问标记数组
-    //初始化
-    fromStartDis.resize(n,inf);
-    fromStartCost.resize(n,inf);
-    preNode.resize(n,-1);
-    visited.resize(n,false);
-    visited[start]=true;
-    fromStartDis[start]=0;
-    fromStartCost[start]=0;
-    //初始化结束
-    while(true)
+    int length;
+    int time;
+} street;
+
+int Dijkstra(map<int, vector<street>> &graph, vector<int> &pre, int begin, int end)
+{
+    vector<bool> visited(pre.size(), false);
+    vector<int> dist(pre.size(), INT_MAX);
+    vector<int> tim(pre.size(), INT_MAX);
+
+    visited[begin] = true;
+    dist[begin] = 0;
+    tim[begin] = 0;
+
+    while (true)
     {
-        for(int i=0;i<map[start].size();++i)//更新路径
+        for (int i = 0; i < graph[begin].size(); i++)
         {
-            if(fromStartDis[map[start][i].end]>fromStartDis[start]+map[start][i].dis)
-            {//找到更短的路径，更新路径长度和时间花费
-                fromStartDis[map[start][i].end]=fromStartDis[start]+map[start][i].dis;
-                fromStartCost[map[start][i].end]=fromStartCost[start]+map[start][i].cost;
-                preNode[map[start][i].end]=start;
+            if (dist[graph[begin][i].end] > dist[begin] + graph[begin][i].length)
+            {
+                dist[graph[begin][i].end] = dist[begin] + graph[begin][i].length;
+                tim[graph[begin][i].end] = tim[begin] + graph[begin][i].time;
+                pre[graph[begin][i].end] = begin;
             }
-            else if(fromStartDis[map[start][i].end]==fromStartDis[start]+map[start][i].dis)
-            {//找到花费更少的路径，更新时间花费
-                if(fromStartCost[map[start][i].end]>fromStartCost[start]+map[start][i].cost)
+            else if (dist[graph[begin][i].end] == dist[begin] + graph[begin][i].length)
+            {
+                if (tim[graph[begin][i].end] > tim[begin] + graph[begin][i].time)
                 {
-                    fromStartCost[map[start][i].end]=fromStartCost[start]+map[start][i].cost;
-                    preNode[map[start][i].end]=start;
+                    tim[graph[begin][i].end] = tim[begin] + graph[begin][i].time;
+                    pre[graph[begin][i].end] = begin;
                 }
             }
         }
-        int min=inf;
-        int minIndex=-1;
-        for(int i=0;i<n;++i)
+
+        int minIndex = -1;
+        int minNum = INT_MAX;
+
+        for (int i = 0; i < pre.size(); i++)
         {
-            if(!visited[i]&&fromStartDis[i]<min)
+            if (!visited[i] && dist[i] < minNum)
             {
-                min=fromStartDis[i];
-                minIndex=i;
+                minIndex = i;
+                minNum = dist[i];
             }
         }
-        if(minIndex==-1)//结束,未找到路径
-            break;
-        start=minIndex;
-        visited[start]=true;
-        if(start==end)//结束，找到路径
-            break;
-    }
-    return fromStartDis[end];
 
-}
-void reversePreNode(vector<int>& pre,int cur,vector<int>& remain)//剔除数组中不在最短路中的节点
-{//remain保存最后start->end的路径
-    if(cur==-1)
-        return;
-    remain.clear();
-    while(cur!=-1)
-    {
-        remain.insert(remain.begin(),cur);
-        cur=pre[cur];
+        if (minIndex == -1)
+            break;
+        if (minIndex == end)
+            break;
+        begin = minIndex;
+        visited[begin] = true;
     }
+    return dist[end];
 }
-void prePrint(vector<int>& remain)
-{//格式化输出
-    if(remain.size()>0)
-        cout<<remain[0];
-    if(remain.size()>1)
-        for(int i=1;i<remain.size();++i)
-            cout<<" -> "<<remain[i];
+
+bool isSame(vector<int> &a, vector<int> &b)
+{
+    if (a.size() != b.size())
+        return false;
+    for (int i = 0; i < a.size(); i++)
+    {
+        if (a[i] != b[i])
+            return false;
+    }
+    return true;
 }
+
+vector<int> getPath(vector<int> &pre, int end)
+{
+    vector<int> res;
+    while (end != -1)
+    {
+        res.push_back(end);
+        end = pre[end];
+    }
+    reverse(res.begin(), res.end());
+    return res;
+}
+
+void printPath(vector<int> &path)
+{
+    if (path.empty())
+        return;
+    cout << path[0];
+    for (int i = 1; i < path.size(); i++)
+        cout << " -> " << path[i];
+}
+
 int main()
 {
-    int n,m;
-    cin>>n>>m;
-    vector<vector<street> > map;//二维数组map
-    map.resize(n);
-    street tmp;
-    int start,oneWay;
-    for(int i=0;i<m;++i)
+    map<int, vector<street>> graph;
+    int nodeNum, streetNum, begin, end;
+    cin >> nodeNum >> streetNum;
+
+    for (int i = 0; i < streetNum; i++)
     {
-        cin>>start>>tmp.end>>oneWay>>tmp.dis>>tmp.cost;
-        map[start].push_back(tmp);
-        if(!oneWay)
+        int a, b, one, length, tim;
+        scanf("%d%d%d%d%d", &a, &b, &one, &length, &tim);
+        street tmp = {b, length, tim};
+        graph[a].push_back(tmp);
+        if (!one)
         {
-            int st=start;
-            start=tmp.end;
-            tmp.end=st;
-            map[start].push_back(tmp);
+            street tmp2 = {a, length, tim};
+            graph[b].push_back(tmp2);
         }
-    }//buildTable
-    int end;
-    cin>>start>>end;
-    vector<int>preDis;
-    vector<int>preCost;
-    int disSum=Dijkstra(map,start,end,n,preDis);
-    cout<<"Distance = "<<disSum;
-    vector<int>remainDis;//保存最短路的整个路径
-    reversePreNode(preDis,end,remainDis);//剔除数组中不在最短路中的节点
-    //至此，关于选取最短距离的最短路计算结束
-    for(int i=0;i<n;++i)//改造map数组，直接用之前的Dijkstra进行计算
-        for(int j=0;j<map[i].size();++j)
-        {
-            map[i][j].dis=map[i][j].cost;
-            map[i][j].cost=1;
-        }
-    int disCost=Dijkstra(map,start,end,n,preCost);
-    vector<int>remainCost;//保存最短路的整个路径
-    int i;
-    reversePreNode(preCost,end,remainCost);//剔除数组中不在最短路中的节点
-    //以下部分用于比较，然后进行格式化的输出
-    if(remainCost.size()==remainDis.size())
+    }
+
+    cin >> begin >> end;
+
+    vector<int> pre(nodeNum, -1);
+    int shortest = Dijkstra(graph, pre, begin, end);
+    vector<int> shortestPath = getPath(pre, end);
+
+    for (int i = 0; i < graph.size(); i++)
     {
-        for(i=0;i<remainCost.size();++i)
-            if(remainCost[i]!=remainDis[i])
-                break;
-        if(i>=remainCost.size())
+        for (int j = 0; j < graph[i].size(); j++)
         {
-            cout<<"; "<<"Time = "<<disCost<<": ";
-            prePrint(remainCost);
-            cout<<endl;
+            graph[i][j].length = graph[i][j].time;
+            graph[i][j].time = 1;
         }
-        else
-        {
-            cout<<": ";prePrint(remainDis);cout<<endl;
-            cout<<"Time = "<<disCost<<": ";
-            prePrint(remainCost);cout<<endl;
-        }
+    }
+
+    fill(pre.begin(), pre.end(), -1);
+    int fastest = Dijkstra(graph, pre, begin, end);
+    vector<int> fastestPath = getPath(pre, end);
+
+    if (isSame(shortestPath, fastestPath))
+    {
+        printf("Distance = %d; ", shortest);
+        printf("Time = %d: ", fastest);
+        printPath(shortestPath);
+        cout << endl;
     }
     else
     {
-        cout<<": ";prePrint(remainDis);cout<<endl;
-        cout<<"Time = "<<disCost<<": ";
-        prePrint(remainCost);cout<<endl;
+        printf("Distance = %d: ", shortest);
+        printPath(shortestPath);
+        cout << endl;
+        printf("Time = %d: ", fastest);
+        printPath(fastestPath);
+        cout << endl;
     }
+
     return 0;
 }
